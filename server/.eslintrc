@@ -1,0 +1,27 @@
+{
+  "extends": [
+    "standard"
+  ],
+  "plugins": [
+    "babel",
+    "react",
+    "promise",
+    "immutable"
+  ],
+  "env": {
+    "browser" : true
+  },
+  "globals": {
+    "__DEV__"      : false,
+    "__TEST__"     : false,
+    "__PROD__"     : false,
+    "__COVERAGE__" : false
+  },
+  "rules": {
+    "comma-dangle"         : ["error", "never"],
+    "key-spacing"          : 0,
+    "semi"                 : [2, "always"],
+    "max-len"              : [2, 120, 2],
+    "object-curly-spacing" : [2, "always"]
+  }
+}

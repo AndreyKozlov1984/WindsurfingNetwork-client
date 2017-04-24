@@ -1,0 +1,79 @@
+.core-layout__viewport {
+  padding-top: 4rem;
+}
+
+@mixin flex-container {
+
+  display: flex;
+  overflow: hidden;
+
+  > * {
+
+    flex: 0 0 auto;
+    overflow: auto;
+  }  
+}
+
+@mixin stretchy {
+
+  flex: 1 1 auto;
+}
+
+@mixin column {
+  flex-direction: column;
+}
+
+.fullscreen {
+  height: 100%;
+  @include flex-container;
+  @include column;
+
+  > .header,
+  > .footer {
+
+  }
+
+  > .layout-main {
+    @include stretchy;
+    @include flex-container;
+
+    > .layout-left,
+    > .layout-right {
+      width: 300px;
+    }
+
+    > .layout-middle {
+      @include stretchy;
+    }
+  }
+}
+
+.HolyGrail {
+  display: flex;
+  height: 100%; /* 1, 3 */
+  flex-direction: column;
+}
+
+.HolyGrail-header,
+.HolyGrail-footer {
+  flex: none; /* 2 */
+}
+
+.HolyGrail-body {
+  flex: 1 0 auto; /* 2 */
+}
+
+.HolyGrail-content {
+  width: 500px;
+}
+
+.HolyGrail-nav {
+  order: -1;
+}
+
+.HolyGrail-nav,
+.HolyGrail-ads {
+  padding: 1em;
+  border-radius: 3px;
+  background: rgba(147, 128, 108, 0.1);
+}
