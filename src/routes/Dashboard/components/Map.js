@@ -3,8 +3,9 @@ import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
 // import MarkerClusterer from 'react-google-maps/lib/addons/MarkerClusterer';
 /* global google */
 
-export default withGoogleMap(function ({ zoom, center, fitBounds, onMapChanged, markers }) {
+export default withGoogleMap(function ({ zoom, center, fitBounds, onMapChanged, onMarkerClicked, markers }) {
   var map = null;
+  console.info('rendering map...');
   const onIdle = function () {
     onMapChanged({
       center: { lat: map.getCenter().lat(), lng: map.getCenter().lng() },
@@ -16,7 +17,6 @@ export default withGoogleMap(function ({ zoom, center, fitBounds, onMapChanged, 
       function () {
         let bounds = new google.maps.LatLngBounds();
         for (let point of markers) {
-          console.info(point);
           bounds.extend(new google.maps.LatLng(point.position.lat, point.position.lng));
         }
 
@@ -36,7 +36,7 @@ export default withGoogleMap(function ({ zoom, center, fitBounds, onMapChanged, 
       center={center}
       onIdle={onIdle}
     >
-      {markers.map(marker => <Marker {...marker} />)}
+      {markers.map(marker => <Marker {...marker} onClick={() => onMarkerClicked(marker.key)} />)}
     </GoogleMap>
   );
 });

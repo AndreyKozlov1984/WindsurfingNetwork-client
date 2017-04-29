@@ -3,5 +3,14 @@
       ["transform-async-to-generator"],
       ["transform-promise-to-bluebird"],
       ["babel-plugin-root-import", {"rootPathSuffix": "src" }]
-  ]
+  ],
+  "env":  {
+      "development": {
+          "plugins": [["react-transform",{
+            "transforms": [{
+                "transform": "react-transform-log-render"
+            }]
+          }]]
+      }
+  }
 }

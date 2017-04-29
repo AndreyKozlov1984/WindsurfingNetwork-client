@@ -3,6 +3,10 @@ import ReactDOM from 'react-dom';
 import createStore from './store/createStore';
 import AppContainer from './containers/AppContainer';
 
+// Perf!
+import Perf from 'react-addons-perf';
+window.Perf = Perf;
+
 // ========================================================
 // Store Instantiation
 // ========================================================

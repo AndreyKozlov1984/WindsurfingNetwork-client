@@ -131,23 +131,28 @@ const Spot = ({ spot }) => {
             })}
           </Panel>
 
-          <Panel header={`Users (${spot.users.length})`}>
-            {spot.users.slice(0, 10).map(function (user) {
-              return (
-                <img
-                  style={{ position: 'inline-block', width: 90, height: 90, margin: 10 }}
-                  src={`/api/usercontent/${user.logo}`}
-                />
-              );
-            })}
-            {spot.users.length > 10
-              ? <Link to={`/spots/${spot.id}/users`}>
-                <h4 style={{ textAlign: 'center' }}>
-                    View {spot.users.length - 10} more users
+          <div className='panel panel-default'>
+            <div className='panel-heading'>
+              <Link to={`/spots/${spot.id}/users`}>Users ({spot.users.length})</Link>
+            </div>
+            <div className='panel-body'>
+              {spot.users.slice(0, 10).map(function (user) {
+                return (
+                  <img
+                    style={{ position: 'inline-block', width: 90, height: 90, margin: 10 }}
+                    src={`/api/usercontent/${user.logo}`}
+                  />
+                );
+              })}
+              {spot.users.length > 10
+                ? <Link to={`/spots/${spot.id}/users`}>
+                  <h4 style={{ textAlign: 'center' }}>
+                    <Link to={`/spots/${spot.id}/users`}>View {spot.users.length - 10} more users</Link>
                   </h4>
-              </Link>
-              : ''}
-          </Panel>
+                </Link>
+                : ''}
+            </div>
+          </div>
         </Col>
       </Grid>
     </div>

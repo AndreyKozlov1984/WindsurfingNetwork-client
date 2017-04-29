@@ -10,13 +10,17 @@ import BenthalCheckboxFilterContainer from '../containers/BenthalCheckboxFilterC
 import DangerCheckboxFilterContainer from '../containers/DangerCheckboxFilterContainer';
 
 import CountrySelectorContainer from '../containers/CountrySelectorContainer';
+import SpotList from './SpotList';
+import ActivityList from './ActivityList';
 import MapContainer from '../containers/MapContainer';
-import RightPartContainer from '../containers/RightPartContainer';
 
-const Dashboard = ({ filters, isReady, selectAll, selectNone }) => {
-  if (!isReady) {
+const Dashboard = (
+  { filters, data, selectAll, selectNone, selectedItemId, onSelectSpot, scrollPosition, onScroll },
+) => {
+  if (!data) {
     return <div>Loading...</div>;
   }
+  let ref = null;
   return (
     <div className='layout-main'>
       <div className='layout-left'>
@@ -36,20 +40,41 @@ const Dashboard = ({ filters, isReady, selectAll, selectNone }) => {
       </div>
       <div className='layout-middle'>
         <MapContainer
-          containerElement={<div style={{ height: `calc(100% - 4px)` }} />}
+          containerElement={<div style={{ height: `calc(100% - 40px)` }} />}
           mapElement={<div style={{ height: `100%` }} />}
         />
+        <p>{JSON.stringify(filters, 2)}</p>
       </div>
-      <RightPartContainer />
+      <div
+        className='layout-right'
+        ref={x => {
+          ref = x;
+        }}
+        onScroll={function (x) {
+          console.info(x);
+          if (ref) {
+            onScroll(ref.scrollTop);
+          }
+        }}
+        style={{ width: '400px' }}
+        scrollTop={scrollPosition}
+      >
+        <SpotList items={data.spots} selectedItemId={selectedItemId} onSelectItem={onSelectSpot} />
+        <ActivityList items={data.activities} />
+      </div>
     </div>
   );
 };
 
 Dashboard.propTypes = {
   filters: React.PropTypes.object.isRequired,
-  isReady: React.PropTypes.bool.isRequired,
+  data: React.PropTypes.object,
+  scrollPosition: React.PropTypes.number.isRequired,
   selectAll: React.PropTypes.func.isRequired,
   selectNone: React.PropTypes.func.isRequired,
+  selectedItemId: React.PropTypes.number,
+  onSelectSpot: React.PropTypes.function,
+  onScroll: React.PropTypes.function,
 };
 
 export default Dashboard;

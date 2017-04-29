@@ -10,8 +10,8 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = state => ({
-  filters: (state.dashboard || {}).filters,
-  data: (state.dashboard || {}).data,
+  filters: state.dashboard.filters,
+  isReady: !!state.dashboard.data,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

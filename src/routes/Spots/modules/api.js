@@ -19,3 +19,13 @@ export async function getSpotGallery (id) {
   return await response.json();
 }
 
+export async function getSpotUsers (id) {
+  const response = await fetch(`/api/spots/${id}/users`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  return await response.json();
+}
+

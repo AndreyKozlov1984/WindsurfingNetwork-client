@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
 import { setFilterState } from '../modules/dashboard';
 
 /*  This is a container component. Notice it does not contain any JSX,
@@ -18,13 +19,13 @@ const mapDispatchToProps = {
   },
 };
 
+const getOptions = createSelector([state => state.dashboard.lookup.countries], countries => [
+  { id: '', name: 'All Countries' },
+  ...countries.map(c => ({ id: c, name: c })),
+]);
+
 const mapStateToProps = state => ({
-  options: [
-    { id: '', name: 'All Countries' },
-    ...state.dashboard.lookup.countries.map(function (c) {
-      return { id: c, name: c };
-    }),
-  ],
+  options: getOptions(state),
   value: state.dashboard.filters.country,
 });
 

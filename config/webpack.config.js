@@ -122,7 +122,7 @@ var path = require('path');
 console.info(path.resolve(__dirname, '../src/'));
 webpackConfig.module.loaders = [{
   test    : /\.(js|jsx)$/,
-  exclude : /node_modules/,
+  exclude: /node_modules\/(?!required-argument)/,
   loader  : 'babel',
   query   : project.compiler_babel,
 }, {

@@ -1,4 +1,4 @@
-import { getSpot, getSpotGallery } from './api';
+import { getSpot, getSpotGallery, getSpotUsers } from './api';
 
 // ------------------------------------
 // Constants
@@ -6,6 +6,7 @@ import { getSpot, getSpotGallery } from './api';
 export const SET_DATA = 'spots/SET_DATA';
 export const SET_SELECTED = 'spots/SET_SELECTED';
 export const SET_SELECTED_GALLERY = 'spots/SET_SELECTED_GALLERY';
+export const SET_SELECTED_USERS = 'spots/SET_SELECTED_USERS';
 export const SELECT_MONTH = 'spots/SELECT_MONTH';
 
 // Actions
@@ -17,6 +18,13 @@ export function loadGallery ({ spotId, selectedMonth }) {
       await dispatch(fetchSpotGallery(spotId));
     }
     dispatch(selectMonth(selectedMonth));
+  };
+}
+
+export function loadSpotUsers (spotId) {
+  return async function (dispatch, getState) {
+    const result = await getSpotUsers(spotId);
+    dispatch(setSelectedUsers(result));
   };
 }
 
@@ -37,6 +45,13 @@ export function fetchSpotGallery (id) {
 export function setSelected (data) {
   return {
     type: SET_SELECTED,
+    data: data,
+  };
+}
+
+export function setSelectedUsers (data) {
+  return {
+    type: SET_SELECTED_USERS,
     data: data,
   };
 }
@@ -88,6 +103,12 @@ const ACTION_HANDLERS = {
       selectedGallery: action.data,
     };
   },
+  [SET_SELECTED_USERS]: function (state, action) {
+    return {
+      ...state,
+      selectedUsers: action.data,
+    };
+  },
   [SELECT_MONTH]: function (state, action) {
     return {
       ...state,
@@ -105,6 +126,7 @@ const initialState = {
   selectedSpot: null,
   selectedGallery: null,
   selectedMonth: null,
+  selectedUsers: null,
 };
 
 export default function spotsReducer (state = initialState, action) {

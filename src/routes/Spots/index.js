@@ -1,7 +1,8 @@
 import { injectReducer } from '~/store/reducers';
 import SpotContainer from './containers/SpotContainer';
+import SpotUsersContainer from './containers/SpotUsersContainer';
 import SpotGalleryContainer from './containers/SpotGalleryContainer';
-import { fetchSpot, loadGallery, default as reducer } from './modules/spots';
+import { fetchSpot, loadGallery, loadSpotUsers, default as reducer } from './modules/spots';
 
 export default store => ({
   path: 'spots',
@@ -29,6 +30,13 @@ export default store => ({
         store.dispatch(loadGallery({ spotId: location.params.id, selectedMonth: +location.params.month }));
       },
       component: SpotGalleryContainer,
+    },
+    {
+      path: ':id/users',
+      onEnter: async function (location) {
+        store.dispatch(loadSpotUsers(location.params.id));
+      },
+      component: SpotUsersContainer,
     },
   ],
 });

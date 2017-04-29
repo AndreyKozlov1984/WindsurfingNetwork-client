@@ -4,7 +4,7 @@ import { Panel } from 'react-bootstrap';
 
 const ActivityList = ({ items }) => (
   <Panel header='Activity List'>
-    {items.map(item => <Activity {...item} />)}
+    {items.map(item => <Activity key={item.id} {...item} />)}
   </Panel>
 );
 

@@ -1,5 +1,6 @@
 import required from 'required-argument';
 import { getDashboardContent, getLookupData } from './api';
+import _ from 'lodash';
 
 // ------------------------------------
 // Constants
@@ -16,6 +17,9 @@ export const CLEAR_QUEUED_REQUEST = 'dashboard/CLEAR_QUEUED_REQUEST';
 export const SET_MAP_POSITION = 'dashboard/SET_MAP_POSITION';
 export const REQUEST_FIT_BOUNDS = 'dashboard/REQUEST_FIT_BOUNDS';
 export const SET_LOOKUP_DATA = 'dashboard/SET_LOOKUP_DATA';
+export const SELECT_SPOT = 'dashboard/SELECT_SPOT';
+export const SELECT_MARKER = 'dashboard/SELECT_MARKER';
+export const SET_SCROLL = 'dashboard/SET_SCROLL';
 
 // ------------------------------------
 // Actions
@@ -102,6 +106,27 @@ export function selectAll () {
 export function selectNone () {
   return {
     type: SELECT_NONE,
+  };
+}
+
+export function selectSpot (spotId) {
+  return {
+    type: SELECT_SPOT,
+    spotId: spotId,
+  };
+}
+
+export function selectMarker (spotId) {
+  return {
+    type: SELECT_MARKER,
+    spotId: spotId,
+  };
+}
+
+export function setScroll (offset) {
+  return {
+    type: SET_SCROLL,
+    offset: offset,
   };
 }
 
@@ -242,6 +267,50 @@ const ACTION_HANDLERS = {
       lookup: action.data,
     };
   },
+  [SELECT_SPOT]: function (state, action) {
+    const selectedItem = _.find(state.data.mapMarkers, 'id', action.spotId);
+    if (selectedItem) {
+      return {
+        ...state,
+        map: {
+          ...state.map,
+          center: {
+            lat: +selectedItem.lat,
+            lng: +selectedItem.lng,
+          },
+          zoom: state.map.zoom < 12 ? 12 : state.map.zoom,
+        },
+        selectedItemId: action.spotId,
+      };
+    } else {
+      return {
+        ...state,
+        selectedItemId: null,
+      };
+    }
+  },
+  [SELECT_MARKER]: function (state, action) {
+    const selectedItem = _.find(state.data.mapMarkers, 'id', action.spotId);
+    if (selectedItem) {
+      return {
+        ...state,
+        selectedItemId: action.spotId,
+        scrollToSelected: true,
+      };
+    } else {
+      return {
+        ...state,
+        selectedItemId: null,
+      };
+    }
+  },
+  [SET_SCROLL]: function (state, action) {
+    return {
+      ...state,
+      scrollPosition: action.offset,
+      scrollToSelected: false,
+    };
+  },
 };
 
 // ------------------------------------
@@ -254,6 +323,8 @@ const initialState = {
     zoom: 3,
   },
   filters: {},
+  selectedItemId: null,
+  scrollPosition: 0,
 };
 
 export default function dashboardReducer (state = initialState, action) {

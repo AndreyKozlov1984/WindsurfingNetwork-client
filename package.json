@@ -36,7 +36,7 @@
       }
     },
     "deploy": {
-      "command": "npm run lint && npm run test && npm run clean && npm run compile",
+      "command": "npm run lint && npm run clean && npm run compile",
       "env": {
         "DEBUG": "app:*"
       }
@@ -104,6 +104,7 @@
     "normalize.css": "^5.0.0",
     "postcss-loader": "^1.1.0",
     "react": "^15.4.0",
+    "react-addons-perf": "^15.4.2",
     "react-bootstrap": "^0.30.8",
     "react-dom": "^15.4.0",
     "react-google-maps": "beta",
@@ -116,6 +117,7 @@
     "redux-logger": "^3.0.1",
     "redux-thunk": "^2.0.0",
     "required-argument": "^0.0.2",
+    "reselect": "^3.0.0",
     "rimraf": "^2.5.4",
     "sass-loader": "^4.0.0",
     "style-loader": "^0.13.1",
@@ -126,9 +128,11 @@
   "devDependencies": {
     "babel-eslint": "^7.1.0",
     "babel-plugin-istanbul": "^3.0.0",
+    "babel-plugin-react-transform": "^2.0.2",
     "babel-plugin-root-import": "^5.1.0",
     "babel-plugin-transform-async-to-generator": "^6.22.0",
     "babel-plugin-transform-promise-to-bluebird": "^1.1.1",
+    "babel-preset-es2015-loose": "^8.0.0",
     "chai": "^3.4.1",
     "chai-as-promised": "^6.0.0",
     "chai-enzyme": "^0.6.1",
@@ -157,6 +161,7 @@
     "prettier-eslint": "^4.4.0",
     "prettier-eslint-cli": "^3.2.0",
     "react-addons-test-utils": "^15.0.0",
+    "react-transform-log-render": "^1.0.0",
     "redbox-react": "^1.2.10",
     "sinon": "^1.17.5",
     "sinon-chai": "^2.8.0",
