@@ -268,7 +268,7 @@ const ACTION_HANDLERS = {
     };
   },
   [SELECT_SPOT]: function (state, action) {
-    const selectedItem = _.find(state.data.mapMarkers, 'id', action.spotId);
+    const selectedItem = _.find(state.data.mapMarkers, { id: action.spotId });
     if (selectedItem) {
       return {
         ...state,
@@ -290,7 +290,7 @@ const ACTION_HANDLERS = {
     }
   },
   [SELECT_MARKER]: function (state, action) {
-    const selectedItem = _.find(state.data.mapMarkers, 'id', action.spotId);
+    const selectedItem = _.find(state.data.mapMarkers, { id: action.spotId });
     if (selectedItem) {
       return {
         ...state,
