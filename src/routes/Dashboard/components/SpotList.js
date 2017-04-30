@@ -1,5 +1,6 @@
 import React from 'react';
 import Spot from './Spot';
+import jquery from 'jquery';
 import { Panel, ListGroup, ListGroupItem } from 'react-bootstrap';
 
 const SpotList = ({ items, selectedItemId, scrollToSelected, onSelectItem }) => {
@@ -8,6 +9,8 @@ const SpotList = ({ items, selectedItemId, scrollToSelected, onSelectItem }) => 
     setTimeout(
       function () {
         selected.scrollIntoView();
+        const container = jquery(selected).closest('.scroll-container');
+        container.scrollTop(container.scrollTop() - 15);
       },
       1,
     );

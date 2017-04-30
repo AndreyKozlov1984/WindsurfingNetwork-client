@@ -6,7 +6,7 @@ const RightPart = ({ scrollPosition, onScroll }) => {
   let scrollContainer = null;
   return (
     <div
-      className='layout-right'
+      className='layout-right scroll-container'
       ref={x => {
         scrollContainer = x;
       }}

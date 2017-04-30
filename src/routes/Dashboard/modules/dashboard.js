@@ -1,5 +1,6 @@
 import required from 'required-argument';
 import { getDashboardContent, getLookupData } from './api';
+import { globalBus, FIT_BOUNDS } from '~/store/globalBus';
 import _ from 'lodash';
 
 // ------------------------------------
@@ -15,7 +16,6 @@ export const SET_DATA = 'dashboard/SET_DATA';
 export const SET_QUEUED_REQUEST = 'dashboard/SET_QUEUED_REQUEST';
 export const CLEAR_QUEUED_REQUEST = 'dashboard/CLEAR_QUEUED_REQUEST';
 export const SET_MAP_POSITION = 'dashboard/SET_MAP_POSITION';
-export const REQUEST_FIT_BOUNDS = 'dashboard/REQUEST_FIT_BOUNDS';
 export const SET_LOOKUP_DATA = 'dashboard/SET_LOOKUP_DATA';
 export const SELECT_SPOT = 'dashboard/SELECT_SPOT';
 export const SELECT_MARKER = 'dashboard/SELECT_MARKER';
@@ -29,6 +29,14 @@ export function setFilterState ({ filterId = required(), filterValue = required(
     dispatch(updateUiFilters({ filterId, filterValue }));
     dispatch(reload());
     // reloadMap
+  };
+}
+
+export function initOrResume () {
+  return async function (dispatch, getState) {
+    if (!getState().dashboard.data) {
+      dispatch(init());
+    }
   };
 }
 
@@ -66,7 +74,8 @@ export function reload () {
 
       dispatch(clearIsLoading());
       dispatch(setData(result));
-      dispatch(requestFitBounds());
+      globalBus.emit(FIT_BOUNDS);
+
       if (hasQueuedRequest()) {
         dispatch(clearQueuedRequest());
         dispatch(reload());
@@ -156,10 +165,6 @@ export function setMapPosition (mapPosition) {
   };
 }
 
-export function requestFitBounds () {
-  return { type: REQUEST_FIT_BOUNDS };
-}
-
 export const actions = {
   setFilterState,
   selectAll,
@@ -169,7 +174,6 @@ export const actions = {
   clearIsLoading,
   setData,
   setMapPosition,
-  requestFitBounds,
 };
 
 // ------------------------------------
@@ -247,17 +251,6 @@ const ACTION_HANDLERS = {
         ...state.map,
         center: action.center,
         zoom: action.zoom,
-        fitBounds: false,
-      },
-    };
-  },
-  [REQUEST_FIT_BOUNDS]: function (state, action) {
-    console.info(action);
-    return {
-      ...state,
-      map: {
-        ...state.map,
-        fitBounds: true,
       },
     };
   },
