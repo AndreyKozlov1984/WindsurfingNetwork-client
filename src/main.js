@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import createStore from './store/createStore';
 import AppContainer from './containers/AppContainer';
 
-// Perf!
+// Perf! making it available in the debugger
 import Perf from 'react-addons-perf';
 window.Perf = Perf;
 

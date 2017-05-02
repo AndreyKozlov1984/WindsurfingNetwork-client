@@ -1,8 +1,10 @@
+// @flow
 import React from 'react';
 import { Grid } from 'react-bootstrap';
 import SinglePost from './SinglePost';
+import { type Post } from '../modules/posts';
 
-const Posts = ({ data }) => {
+const Posts = ({ data }: { data: Array<Post> }) => {
   if (!data) {
     return <div>Loading...</div>;
   }

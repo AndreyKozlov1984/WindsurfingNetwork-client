@@ -1,79 +1,102 @@
+// @flow
 import { getPosts, getPost } from './api';
 
-// ------------------------------------
-// Constants
-// ------------------------------------
-export const SET_DATA = 'posts/SET_DATA';
-export const SET_SELECTED = 'posts/SET_SELECTED';
+export type Post = {
+  id: number,
+  comments: Array<Object>,
+  content: string,
+  date: string,
+  image_filename: string,
+  logo: string,
+  name: string,
+};
+type SetDataAction = {
+  type: 'posts/SET_DATA',
+  +data: Array<Post>,
+};
+type SetSelectedAction = {
+  type: 'posts/SET_SELECTED',
+  +data: Post,
+};
+export type Action = SetDataAction | SetSelectedAction;
+type Dispatch = (action: Action | ThunkAction) => any;
+type GetState = () => Object;
+type ThunkAction = (dispatch: Dispatch, getState: GetState) => any;
+export type State = {
+  +isLoading: boolean,
+  +data: ?Array<Post>,
+  +selectedPost: ?Post,
+};
 
 // Actions
-export function init () {
+export function init (): ThunkAction {
   return async function (dispatch, getState) {
     dispatch(reload());
   };
 }
 
-export function fetchPost (id) {
+export function fetchPost (id: number): ThunkAction {
   return async function (dispatch, getState) {
     const result = await getPost(id);
     dispatch(setSelected(result));
   };
 }
 
-export function setSelected (data) {
+export function setSelected (data: Post): SetSelectedAction {
   return {
-    type: SET_SELECTED,
+    type: 'posts/SET_SELECTED',
     data: data,
   };
 }
 
-export function reload () {
+export function reload (): ThunkAction {
   return async function (dispatch, getState) {
     const result = await getPosts();
     dispatch(setData(result));
   };
 }
 
-export function setData (data) {
+export function setData (data: Array<Post>): SetDataAction {
   return {
-    type: SET_DATA,
+    type: 'posts/SET_DATA',
     data: data,
   };
 }
 
-export const actions = {
-  setData,
-};
-
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
-const ACTION_HANDLERS = {
-  [SET_DATA]: function (state, action) {
-    return {
-      ...state,
-      data: action.data,
-    };
-  },
-  [SET_SELECTED]: function (state, action) {
-    return {
-      ...state,
-      selectedPost: action.data,
-    };
-  },
+const SetDataHandler = function (state: State, action: SetDataAction): State {
+  return {
+    ...state,
+    data: action.data,
+  };
+};
+const SetSelectedHandler = function (state: State, action: SetSelectedAction): State {
+  return {
+    ...state,
+    selectedPost: action.data,
+  };
 };
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
-const initialState = {
+const initialState: State = {
   isLoading: false,
   data: null,
   selectedPost: null,
 };
 
-export default function postsReducer (state = initialState, action) {
-  const handler = ACTION_HANDLERS[action.type];
-  return handler ? handler(state, action) : state;
+export default function postsReducer (state: State = initialState, action: Action): State {
+  switch (action.type) {
+    case 'posts/SET_DATA':
+      return SetDataHandler(state, action);
+    case 'posts/SET_SELECTED':
+      return SetSelectedHandler(state, action);
+    default:
+      (action: empty);
+      return state;
+  }
 }
 

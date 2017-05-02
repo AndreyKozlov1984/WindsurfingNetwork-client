@@ -1,8 +1,9 @@
+// @flow
 import moment from 'moment';
-export function formatDate (input) {
+export function formatDate (input: string): string {
   return moment(input).format('DD.MM.YYYY');
 }
-export function formatDateTime (input) {
+export function formatDateTime (input: string): string {
   return moment(input).format('DD.MM.YYYY HH:mm');
 }
 
@@ -14,11 +15,11 @@ export const centerStyles = {
   transform: 'translate(-50%, -50%)',
 };
 
-export function monthByNumber (month) {
+export function monthByNumber (month: number): string {
   return moment(+month + 1, 'MM').format('MMMM');
 }
 
-export function propertyNameText (propertyId) {
+export function propertyNameText (propertyId: string): ?string {
   return {
     surface: 'Surface',
     wind: 'Wind',
@@ -29,7 +30,7 @@ export function propertyNameText (propertyId) {
     danger: 'Dangers',
   }[propertyId];
 }
-export function propertyValueText (valueId) {
+export function propertyValueText (valueId: string): ?string {
   return {
     flat: 'Flat',
     small_chop: 'Small Chop',

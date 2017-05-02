@@ -1,4 +1,3 @@
-import required from 'required-argument';
 import { getDashboardContent, getLookupData } from './api';
 import { globalBus, FIT_BOUNDS } from '~/store/globalBus';
 import _ from 'lodash';
@@ -24,7 +23,7 @@ export const SET_SCROLL = 'dashboard/SET_SCROLL';
 // ------------------------------------
 // Actions
 // ------------------------------------
-export function setFilterState ({ filterId = required(), filterValue = required() }) {
+export function setFilterState ({ filterId, filterValue }) {
   return async function (dispatch, getState) {
     dispatch(updateUiFilters({ filterId, filterValue }));
     dispatch(reload());
@@ -98,7 +97,7 @@ export function setQueuedRequest () {
   };
 }
 
-export function updateUiFilters ({ filterId = required(), filterValue = required() }) {
+export function updateUiFilters ({ filterId, filterValue }) {
   return {
     type: UPDATE_UI_FILTERS,
     filterId,

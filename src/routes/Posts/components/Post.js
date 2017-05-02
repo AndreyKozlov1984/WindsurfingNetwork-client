@@ -1,24 +1,28 @@
+// @flow
 import { Grid } from 'react-bootstrap';
 import SinglePost from './SinglePost';
 import React from 'react';
+import { type Post } from '../modules/posts';
 
-const Post = ({ data }) => {
-  if (!data) {
-    return <div>Loading...</div>;
+export type PostProps = {|
+  data: ?Post,
+|};
+class PostComponent extends React.PureComponent {
+  props: PostProps;
+  render () {
+    if (!this.props.data) {
+      return <div>Loading...</div>;
+    }
+    const post = this.props.data;
+    return (
+      <div style={{ overflowY: 'auto', height: '100%' }}>
+        <Grid>
+          <SinglePost {...post} />
+        </Grid>
+      </div>
+    );
   }
-  const post = data;
-  return (
-    <div style={{ overflowY: 'auto', height: '100%' }}>
-      <Grid>
-        <SinglePost {...post} />
-      </Grid>
-    </div>
-  );
-};
+}
 
-Post.propTypes = {
-  data: React.PropTypes.object,
-};
-
-export default Post;
+export default PostComponent;
 

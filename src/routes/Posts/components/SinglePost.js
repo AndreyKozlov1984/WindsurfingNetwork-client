@@ -1,8 +1,10 @@
+// @flow
 import React from 'react';
 import { Media } from 'react-bootstrap';
 import { formatDateTime } from '~/utils/formatters';
+import { type Post } from '../modules/posts';
 
-const SinglePost = ({ logo, name, image_filename: imageFilename, comments, date, content }) => (
+const SinglePost = ({ logo, name, image_filename: imageFilename, comments, date, content }: Post) => (
   <Media>
     <Media.Left>
       <img width={64} height={64} src={`/api/usercontent/${logo}`} />
@@ -29,13 +31,5 @@ const SinglePost = ({ logo, name, image_filename: imageFilename, comments, date,
     </Media.Body>
   </Media>
 );
-SinglePost.propTypes = {
-  logo: React.PropTypes.string,
-  name: React.PropTypes.string,
-  image_filename: React.PropTypes.string,
-  comments: React.PropTypes.array,
-  date: React.PropTypes.string,
-  content: React.PropTypes.string,
-};
 export default SinglePost;
 

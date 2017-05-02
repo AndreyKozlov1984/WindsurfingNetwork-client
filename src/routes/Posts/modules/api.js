@@ -1,3 +1,4 @@
+// @flow
 import fetch from 'isomorphic-fetch';
 export async function getPosts () {
   const response = await fetch('/api/posts', {
@@ -9,7 +10,7 @@ export async function getPosts () {
   return await response.json();
 }
 
-export async function getPost (id) {
+export async function getPost (id: number) {
   const response = await fetch(`/api/posts/${id}`, {
     method: 'GET',
     headers: {

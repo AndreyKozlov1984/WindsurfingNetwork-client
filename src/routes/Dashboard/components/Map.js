@@ -1,16 +1,14 @@
 import React from 'react';
 import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
 import { globalBus, FIT_BOUNDS } from '~/store/globalBus';
+import autobind from 'autobind-decorator';
 // import MarkerClusterer from 'react-google-maps/lib/addons/MarkerClusterer';
 /* global google */
 
+// TODO: @autobind on fitBounds / onIdle
+// @listen on a whole component like
+// @listen(FIT_BOUNDS) on a method
 class MapComponent extends React.PureComponent {
-  constructor () {
-    super();
-    this.map = null;
-    this.fitBounds = this.fitBounds.bind(this);
-    this.onIdle = this.onIdle.bind(this);
-  }
   static propTypes = {
     zoom: React.PropTypes.number.isRequired,
     center: React.PropTypes.object.isRequired,
@@ -24,7 +22,7 @@ class MapComponent extends React.PureComponent {
   componentWillUnmount () {
     globalBus.off(FIT_BOUNDS, this.fitBounds);
   }
-  fitBounds () {
+  @autobind fitBounds () {
     let bounds = new google.maps.LatLngBounds();
     for (let point of this.props.markers) {
       bounds.extend(new google.maps.LatLng(point.position.lat, point.position.lng));
@@ -33,7 +31,7 @@ class MapComponent extends React.PureComponent {
       this.map.fitBounds(bounds);
     }
   }
-  onIdle () {
+  @autobind onIdle () {
     this.props.onMapChanged({
       center: { lat: this.map.getCenter().lat(), lng: this.map.getCenter().lng() },
       zoom: this.map.getZoom(),
