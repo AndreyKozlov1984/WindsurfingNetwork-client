@@ -1,7 +1,11 @@
+// @flow
 import React from 'react';
 import { Breadcrumb, Media, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-const SpotGallery = ({ spot }) => {
+import { type SpotForUsers as SpotForUsersType, type User as UserType } from '../modules/spots';
+export type StateProps = { spot: ?SpotForUsersType };
+export type DispatchProps = {} & $Shape<{}>;
+const SpotUsers = ({ spot }: StateProps & DispatchProps) => {
   if (!spot) {
     return <div>Loading...</div>;
   }
@@ -24,7 +28,7 @@ const SpotGallery = ({ spot }) => {
       </div>
       <div className='layout-middle'>
         <ListGroup>
-          {spot.users.map(user => (
+          {spot.users.map((user: UserType) => (
             <ListGroupItem>
               <Media>
                 <Media.Left>
@@ -32,7 +36,7 @@ const SpotGallery = ({ spot }) => {
                 </Media.Left>
                 <Media.Body>
                   <Media.Heading>{user.name}</Media.Heading>
-                  <div>{[user.country, user.city].filter(x => x).join(', ')}</div>
+                  <div>{[user.country, user.city].filter((x: ?string) => x).join(', ')}</div>
                   <span>Rating: </span><span> {user.rating}</span>&nbsp;
                   <span>Photos: </span><span>{user.photos_count} </span>&nbsp;
                 </Media.Body>
@@ -44,8 +48,5 @@ const SpotGallery = ({ spot }) => {
     </div>
   );
 };
-SpotGallery.propTypes = {
-  spot: React.PropTypes.object,
-};
-export default SpotGallery;
+export default SpotUsers;
 

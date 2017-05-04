@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import { LinkContainer, IndexLinkContainer } from 'react-router-bootstrap';
 import { Nav, Navbar, NavItem } from 'react-bootstrap';

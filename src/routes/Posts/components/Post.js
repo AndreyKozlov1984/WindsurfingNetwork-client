@@ -9,7 +9,8 @@ export type PostProps = {|
 |};
 class PostComponent extends React.PureComponent {
   props: PostProps;
-  render () {
+  // eslint-disable-next-line flowtype/no-weak-types
+  render (): React$Element<any> {
     if (!this.props.data) {
       return <div>Loading...</div>;
     }

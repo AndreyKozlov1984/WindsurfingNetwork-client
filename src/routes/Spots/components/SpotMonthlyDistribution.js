@@ -1,12 +1,13 @@
+// @flow
 import React from 'react';
 import { monthByNumber } from '~/utils/formatters';
 import _ from 'lodash';
 
 const columnWidth = 100.0 / 12.0;
-const SpotMonthlyDistribution = ({ distribution }) => {
+const SpotMonthlyDistribution = ({ distribution }: { distribution: number[] }) => {
   return (
     <div style={{ width: '100%', height: 200, position: 'relative' }}>
-      {_.range(12).map(function (month) {
+      {_.range(12).map(function (month: number) {
         return (
           <div
             style={{
@@ -36,9 +37,6 @@ const SpotMonthlyDistribution = ({ distribution }) => {
 
     </div>
   );
-};
-SpotMonthlyDistribution.propTypes = {
-  distribution: React.PropTypes.arrayOf(React.PropTypes.number).isRequired,
 };
 export default SpotMonthlyDistribution;
 

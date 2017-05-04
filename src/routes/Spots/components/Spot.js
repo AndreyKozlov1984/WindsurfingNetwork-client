@@ -1,3 +1,4 @@
+// @flow
 import { Grid, Carousel, Col, Panel, Media, Tabs, Tab } from 'react-bootstrap';
 import React from 'react';
 import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
@@ -6,41 +7,41 @@ import _ from 'lodash';
 import { centerStyles } from '~/utils/formatters';
 import SpotConditions from './SpotConditions';
 import SpotMonthlyDistribution from './SpotMonthlyDistribution';
+import { type Spot as SpotType, type School as SchoolType, type User as UserType } from '../modules/spots';
 
-const Map = withGoogleMap(function ({ spot }) {
-  return (
-    <GoogleMap zoom={12} center={{ lat: spot.lat, lng: spot.lng }}>
-      <Marker position={{ lat: spot.lat, lng: spot.lng }} key='point' />
-    </GoogleMap>
-  );
-});
+export type DispatchProps = {} & $Shape<{}>;
+export type StateProps = {|
+  spot: ?SpotType,
+|};
 
-const MonthsAvailability = function ({ spot }) {
-  const activities = {
-    sailing: 'Sailing',
-    surfing: 'Surfing',
-    snowkiting: 'Snow Kiting',
-    kitesurfing: 'Kite Surfing',
-    windsurfing: 'Wind Surfing',
-  };
-  return (
-    <Tabs defaultActiveKey={0}>
-      {_.map(_.keys(activities), function (key, index) {
-        const value = activities[key];
-        return (
-          <Tab eventKey={index} title={value}>
-            <SpotMonthlyDistribution distribution={spot.monthly_distribution[key]} />
-          </Tab>
-        );
-      })}
-    </Tabs>
-  );
-};
-MonthsAvailability.propTypes = {
-  spot: React.PropTypes.object,
+const Map = withGoogleMap(({ spot }: { spot: SpotType }): React$Element<any> => (
+  <GoogleMap zoom={12} center={{ lat: spot.lat, lng: spot.lng }}>
+    <Marker position={{ lat: spot.lat, lng: spot.lng }} key='point' />
+  </GoogleMap>
+));
+
+const activities: { [string]: string } = {
+  sailing: 'Sailing',
+  surfing: 'Surfing',
+  snowkiting: 'Snow Kiting',
+  kitesurfing: 'Kite Surfing',
+  windsurfing: 'Wind Surfing',
 };
 
-const Spot = ({ spot }) => {
+const MonthsAvailability = ({ spot }: { spot: SpotType }) => (
+  <Tabs defaultActiveKey={0}>
+    {_.map(_.keys(activities), function (key: string, index: number) {
+      const value = activities[key];
+      return (
+        <Tab eventKey={index} title={value}>
+          <SpotMonthlyDistribution distribution={spot.monthly_distribution[key]} />
+        </Tab>
+      );
+    })}
+  </Tabs>
+);
+
+const Spot = ({ spot }: DispatchProps & StateProps) => {
   if (!spot) {
     return <div>Loading...</div>;
   }
@@ -77,7 +78,7 @@ const Spot = ({ spot }) => {
             </div>
             <div className='panel-body'>
               <Carousel indicators={false} interval={100400}>
-                {spot.photos.slice(0, 10).map(function (photo) {
+                {spot.photos.slice(0, 10).map(function (photo: string) {
                   return (
                     <Carousel.Item style={{ height: '300px' }}>
                       <div
@@ -116,7 +117,7 @@ const Spot = ({ spot }) => {
           />
           <br />
           <Panel header='Schools'>
-            {spot.schools.map(function (school) {
+            {spot.schools.map(function (school: SchoolType) {
               return (
                 <Media>
                   <Media.Left>
@@ -136,14 +137,14 @@ const Spot = ({ spot }) => {
               <Link to={`/spots/${spot.id}/users`}>Users ({spot.users.length})</Link>
             </div>
             <div className='panel-body'>
-              {spot.users.slice(0, 10).map(function (user) {
-                return (
+              {spot.users
+                .slice(0, 10)
+                .map((user: UserType) => (
                   <img
                     style={{ position: 'inline-block', width: 90, height: 90, margin: 10 }}
                     src={`/api/usercontent/${user.logo}`}
                   />
-                );
-              })}
+                ))}
               {spot.users.length > 10
                 ? <Link to={`/spots/${spot.id}/users`}>
                   <h4 style={{ textAlign: 'center' }}>
@@ -157,10 +158,6 @@ const Spot = ({ spot }) => {
       </Grid>
     </div>
   );
-};
-
-Spot.propTypes = {
-  spot: React.PropTypes.object,
 };
 
 export default Spot;

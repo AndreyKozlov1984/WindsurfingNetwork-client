@@ -1,5 +1,7 @@
+// @flow
 import fetch from 'isomorphic-fetch';
-export async function getDashboardContent (filters) {
+import { type DashboardData, type LookupData, type Filters } from './dashboard';
+export async function getDashboardContent (filters: Filters): Promise<DashboardData> {
   const response = await fetch('/api/dashboard', {
     method: 'POST',
     headers: {
@@ -10,7 +12,7 @@ export async function getDashboardContent (filters) {
   return await response.json();
 }
 
-export async function getLookupData () {
+export async function getLookupData (): Promise<LookupData> {
   const response = await fetch('/api/dashboard/init', {});
   return await response.json();
 }

@@ -1,10 +1,12 @@
 // @flow
-import { applyMiddleware, compose, createStore } from 'redux';
+import { applyMiddleware, compose, createStore, type Store } from 'redux';
+import { type State } from '~/store/state';
+import { type Action } from '~/store/action';
 import thunk from 'redux-thunk';
 import makeRootReducer from './reducers';
 import logger from 'redux-logger';
 
-export default (initialState: any = {}) => {
+export default (initialState: any = {}): Store<State, Action> => {
   // ======================================================
   // Middleware Configuration
   // ======================================================
@@ -17,7 +19,7 @@ export default (initialState: any = {}) => {
 
   let composeEnhancers = compose;
 
-  declare var __DEV__: any;
+  declare var __DEV__: boolean;
   if (__DEV__) {
     const composeWithDevToolsExtension = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
     if (typeof composeWithDevToolsExtension === 'function') {
@@ -35,7 +37,7 @@ export default (initialState: any = {}) => {
   );
   store.asyncReducers = {};
 
-  declare var module: any;
+  declare var module: { hot?: { accept: Function } };
   if (module.hot) {
     module.hot.accept('./reducers', () => {
       const reducers = require('./reducers').default;

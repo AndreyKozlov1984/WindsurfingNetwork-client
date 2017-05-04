@@ -1,27 +1,34 @@
+// @flow
 import React from 'react';
 import { Panel, Breadcrumb, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import Gallery from 'react-photo-gallery';
 import _ from 'lodash';
 import { monthByNumber } from '~/utils/formatters';
-const SpotGallery = ({ spot, selectedMonth, onSelectMonth }) => {
-  if (!spot) {
-    return <div>Loading...</div>;
-  }
-  const galleryPhoto = photo => ({
-    width: photo.width,
-    height: photo.height,
-    src: `/api/usercontent/${photo.photo}`,
-  });
+import {
+  type SpotForGallery as SpotForGalleryType,
+  type PhotosByMonth as PhotosByMonthType,
+  type Photo as PhotoType,
+} from '../modules/spots';
 
-  const months = [
+export type DispatchProps = {} & $Shape<{}>;
+export type StateProps = {| spot: ?SpotForGalleryType, selectedMonth: ?number |};
+
+type MonthInfo = {
+  id: ?number,
+  text: string,
+  href: string,
+};
+
+const getMonthInfo = (spot: SpotForGalleryType, selectedMonth: ?number) =>
+  [
     {
       id: null,
       text: `All Months (${_.flatten(_.values(spot.photos)).length})`,
       href: `/spots/${spot.id}/gallery`,
     },
   ].concat(
-    _.range(12).map(function (monthNumber) {
+    _.range(12).map(function (monthNumber: number) {
       return {
         id: monthNumber,
         text: `${monthByNumber(monthNumber)} (${(spot.photos[monthNumber] || []).length})`,
@@ -30,7 +37,20 @@ const SpotGallery = ({ spot, selectedMonth, onSelectMonth }) => {
     }),
   );
 
-  const visiblePhotos = selectedMonth === null ? spot.photos : { [selectedMonth]: spot.photos[selectedMonth] || [] };
+const SpotGallery = ({ spot, selectedMonth }: DispatchProps & StateProps) => {
+  if (!spot) {
+    return <div>Loading...</div>;
+  }
+  const galleryPhoto = (photo: PhotoType) => ({
+    width: photo.width,
+    height: photo.height,
+    src: `/api/usercontent/${photo.photo}`,
+  });
+  const months: MonthInfo[] = getMonthInfo(spot, selectedMonth);
+
+  const visiblePhotos: PhotosByMonthType = typeof selectedMonth !== 'number'
+    ? spot.photos
+    : { [selectedMonth]: spot.photos[selectedMonth] || [] };
 
   return (
     <div className='layout-main' style={{ marginTop: 30 }}>
@@ -46,7 +66,7 @@ const SpotGallery = ({ spot, selectedMonth, onSelectMonth }) => {
               Photo Gallery
             </Breadcrumb.Item>
           </LinkContainer>
-          {selectedMonth !== null
+          {typeof selectedMonth === 'number'
             ? <LinkContainer to={`/spots/${spot.id}/gallery/${selectedMonth}`}>
               <Breadcrumb.Item>
                 {monthByNumber(selectedMonth)}
@@ -58,7 +78,7 @@ const SpotGallery = ({ spot, selectedMonth, onSelectMonth }) => {
       <div className='layout-left' style={{ width: 200, margin: '0 10px' }}>
         <Panel header='Photos per month'>
           <ListGroup>
-            {months.map(monthInfo => (
+            {months.map((monthInfo: MonthInfo) => (
               <LinkContainer to={monthInfo.href}>
                 <ListGroupItem style={{ outline: 0 }} key={monthInfo.id} active={monthInfo.id === selectedMonth}>
                   {monthInfo.text}
@@ -69,9 +89,9 @@ const SpotGallery = ({ spot, selectedMonth, onSelectMonth }) => {
         </Panel>
       </div>
       <div className='layout-middle'>
-        {_.map(visiblePhotos, function (monthPhotos, month) {
+        {_.map(visiblePhotos, function (monthPhotos: PhotoType[], month: string) {
           return (
-            <Panel key={month} header={monthByNumber(month)}>
+            <Panel key={month} header={monthByNumber(+month)}>
               <Gallery photos={monthPhotos.map(galleryPhoto)} />
             </Panel>
           );
@@ -79,11 +99,6 @@ const SpotGallery = ({ spot, selectedMonth, onSelectMonth }) => {
       </div>
     </div>
   );
-};
-SpotGallery.propTypes = {
-  spot: React.PropTypes.object,
-  selectedMonth: React.PropTypes.number,
-  onSelectMonth: React.PropTypes.function,
 };
 export default SpotGallery;
 

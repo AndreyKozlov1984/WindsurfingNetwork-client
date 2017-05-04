@@ -1,13 +1,12 @@
+// @flow
 import { connect } from 'react-redux';
+import { type State } from '~/store/state';
 
-import SpotGallery from '../components/SpotGallery';
-import { selectMonth } from '../modules/spots.js';
+import { default as SpotGallery, type DispatchProps, type StateProps } from '../components/SpotGallery';
 
-const mapDispatchToProps = {
-  onSelectMonth: selectMonth,
-};
+const mapDispatchToProps: DispatchProps = {};
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: State): StateProps => ({
   spot: state.spots.selectedGallery,
   selectedMonth: state.spots.selectedMonth,
 });

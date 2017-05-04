@@ -1,12 +1,17 @@
-import React, { Component, PropTypes } from 'react';
+// @flow
+import React, { Component } from 'react';
 import { browserHistory, Router } from 'react-router';
 import { Provider } from 'react-redux';
 import { syncHistoryWithStore } from 'react-router-redux';
+import { type Store } from 'redux';
+import { type State } from '~/store/state';
+import { type Action } from '~/store/action';
+import { type RouteConfig } from '~/routes/types';
 
 class AppContainer extends Component {
-  static propTypes = {
-    routes: PropTypes.object.isRequired,
-    store: PropTypes.object.isRequired,
+  props: {
+    routes: RouteConfig,
+    store: Store<State, Action>,
   };
 
   shouldComponentUpdate () {

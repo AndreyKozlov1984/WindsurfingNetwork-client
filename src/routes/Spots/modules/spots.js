@@ -1,19 +1,91 @@
+// @flow
 import { getSpot, getSpotGallery, getSpotUsers } from './api';
+import { type State as GlobalState } from '~/store/state';
 
-// ------------------------------------
-// Constants
-// ------------------------------------
-export const SET_DATA = 'spots/SET_DATA';
-export const SET_SELECTED = 'spots/SET_SELECTED';
-export const SET_SELECTED_GALLERY = 'spots/SET_SELECTED_GALLERY';
-export const SET_SELECTED_USERS = 'spots/SET_SELECTED_USERS';
-export const SELECT_MONTH = 'spots/SELECT_MONTH';
+export type Spot = {
+  lat: number,
+  lng: number,
+  id: number,
+  logo: string,
+  name: string,
+  country: string,
+  region: string,
+  rating: number,
+  monthly_distribution: { [string]: number[] },
+  photos: Array<string>,
+  users: Array<User>,
+  schools: Array<School>,
+};
+
+export type SpotForUsers = {
+  +id: number,
+  +name: string,
+  +users: User[],
+};
+
+export type Photo = {
+  +width: number,
+  +height: number,
+  +photo: string,
+};
+export type PhotosByMonth = { [number]: Photo[] };
+
+export type SpotForGallery = {
+  +id: number,
+  +name: string,
+  +photos: PhotosByMonth,
+};
+
+export type User = {
+  logo: string,
+  name: string,
+  country: ?string,
+  city: ?string,
+  rating: number,
+  photos_count: number,
+};
+
+export type School = {
+  id: number,
+  logo: string,
+  name: string,
+};
+
+type SetSelectedAction = {
+  +type: 'spots/SET_SELECTED',
+  +data: Spot,
+};
+
+type SetSelectedGalleryAction = {
+  +type: 'spots/SET_SELECTED_GALLERY',
+  +data: SpotForGallery,
+};
+
+type SetSelectedUsersAction = {
+  +type: 'spots/SET_SELECTED_USERS',
+  +data: SpotForUsers,
+};
+
+type SelectMonthAction = {
+  +type: 'spots/SELECT_MONTH',
+  +month: ?number,
+};
 
 // Actions
+export type Action = SetSelectedAction | SetSelectedGalleryAction | SetSelectedUsersAction | SelectMonthAction;
+type Dispatch = (action: Action | ThunkAction) => Promise<void>;
+type GetState = () => GlobalState;
+type ThunkAction = (dispatch: Dispatch, getState: GetState) => Promise<void>;
+export type State = {
+  isLoading: boolean,
+  selectedSpot: ?Spot,
+  selectedGallery: ?SpotForGallery,
+  selectedMonth: ?number,
+  selectedUsers: ?SpotForUsers,
+};
 
-export function loadGallery ({ spotId, selectedMonth }) {
-  return async function (dispatch, getState) {
-    console.info(spotId, getState());
+export function loadGallery ({ spotId, selectedMonth }: { spotId: number, selectedMonth: ?number }): ThunkAction {
+  return async function (dispatch: Dispatch, getState: GetState): Promise<void> {
     if (spotId !== (getState().spots.selectedGallery || {}).id) {
       await dispatch(fetchSpotGallery(spotId));
     }
@@ -21,116 +93,107 @@ export function loadGallery ({ spotId, selectedMonth }) {
   };
 }
 
-export function loadSpotUsers (spotId) {
-  return async function (dispatch, getState) {
+export function loadSpotUsers (spotId: number): ThunkAction {
+  return async function (dispatch: Dispatch, getState: GetState): Promise<void> {
     const result = await getSpotUsers(spotId);
     dispatch(setSelectedUsers(result));
   };
 }
 
-export function fetchSpot (id) {
-  return async function (dispatch, getState) {
+export function fetchSpot (id: number): ThunkAction {
+  return async function (dispatch: Dispatch, getState: GetState): Promise<void> {
     const result = await getSpot(id);
     dispatch(setSelected(result));
   };
 }
 
-export function fetchSpotGallery (id) {
-  return async function (dispatch, getState) {
+export function fetchSpotGallery (id: number): ThunkAction {
+  return async function (dispatch: Dispatch, getState: GetState): Promise<void> {
     const result = await getSpotGallery(id);
     dispatch(setSelectedGallery(result));
   };
 }
 
-export function setSelected (data) {
+export function setSelected (data: Spot): SetSelectedAction {
   return {
-    type: SET_SELECTED,
+    type: 'spots/SET_SELECTED',
     data: data,
   };
 }
 
-export function setSelectedUsers (data) {
+export function setSelectedUsers (data: SpotForUsers): SetSelectedUsersAction {
   return {
-    type: SET_SELECTED_USERS,
+    type: 'spots/SET_SELECTED_USERS',
     data: data,
   };
 }
 
-export function selectMonth (month) {
+export function selectMonth (month: ?number): SelectMonthAction {
   return {
-    type: SELECT_MONTH,
+    type: 'spots/SELECT_MONTH',
     month: month,
   };
 }
 
-export function setSelectedGallery (data) {
+export function setSelectedGallery (data: SpotForGallery): SetSelectedGalleryAction {
   return {
-    type: SET_SELECTED_GALLERY,
+    type: 'spots/SET_SELECTED_GALLERY',
     data: data,
   };
 }
-
-export function setData (data) {
-  return {
-    type: SET_DATA,
-    data: data,
-  };
-}
-
-export const actions = {
-  setData,
-};
 
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
-const ACTION_HANDLERS = {
-  [SET_DATA]: function (state, action) {
-    return {
-      ...state,
-      data: action.data,
-    };
-  },
-  [SET_SELECTED]: function (state, action) {
-    return {
-      ...state,
-      selectedSpot: action.data,
-    };
-  },
-  [SET_SELECTED_GALLERY]: function (state, action) {
-    return {
-      ...state,
-      selectedGallery: action.data,
-    };
-  },
-  [SET_SELECTED_USERS]: function (state, action) {
-    return {
-      ...state,
-      selectedUsers: action.data,
-    };
-  },
-  [SELECT_MONTH]: function (state, action) {
-    return {
-      ...state,
-      selectedMonth: action.month,
-    };
-  },
+const setSelectedHandler = function (state: State, action: SetSelectedAction): State {
+  return {
+    ...state,
+    selectedSpot: action.data,
+  };
+};
+const setSelectedGalleryHandler = function (state: State, action: SetSelectedGalleryAction): State {
+  return {
+    ...state,
+    selectedGallery: action.data,
+  };
+};
+const setSelectedUsersHandler = function (state: State, action: SetSelectedUsersAction): State {
+  return {
+    ...state,
+    selectedUsers: action.data,
+  };
+};
+const selectMonthHandler = function (state: State, action: SelectMonthAction): State {
+  return {
+    ...state,
+    selectedMonth: action.month,
+  };
 };
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
-const initialState = {
+const initialState: State = {
   isLoading: false,
-  data: null,
   selectedSpot: null,
   selectedGallery: null,
   selectedMonth: null,
   selectedUsers: null,
 };
 
-export default function spotsReducer (state = initialState, action) {
-  const handler = ACTION_HANDLERS[action.type];
-  return handler ? handler(state, action) : state;
+export default function spotsReducer (state: State = initialState, action: Action): State {
+  switch (action.type) {
+    case 'spots/SET_SELECTED':
+      return setSelectedHandler(state, action);
+    case 'spots/SET_SELECTED_GALLERY':
+      return setSelectedGalleryHandler(state, action);
+    case 'spots/SET_SELECTED_USERS':
+      return setSelectedUsersHandler(state, action);
+    case 'spots/SELECT_MONTH':
+      return selectMonthHandler(state, action);
+    default:
+      (action: empty);
+      return state;
+  }
 }
 

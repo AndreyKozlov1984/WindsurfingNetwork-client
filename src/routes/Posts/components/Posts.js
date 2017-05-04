@@ -4,7 +4,7 @@ import { Grid } from 'react-bootstrap';
 import SinglePost from './SinglePost';
 import { type Post } from '../modules/posts';
 
-const Posts = ({ data }: { data: Array<Post> }) => {
+const Posts = ({ data }: { data: Post[] }): React$Element<any> => {
   if (!data) {
     return <div>Loading...</div>;
   }
@@ -12,16 +12,10 @@ const Posts = ({ data }: { data: Array<Post> }) => {
     <div style={{ overflowY: 'auto', height: '100%' }}>
       <Grid>
         <h2>Posts</h2>
-        {data.map(function (post) {
-          return <SinglePost {...post} />;
-        })}
+        {data.map((post: Post) => <SinglePost {...post} />)}
       </Grid>
     </div>
   );
-};
-
-Posts.propTypes = {
-  data: React.PropTypes.array,
 };
 
 export default Posts;

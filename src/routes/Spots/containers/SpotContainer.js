@@ -1,10 +1,10 @@
+// @flow
 import { connect } from 'react-redux';
+import { type State } from '~/store/state';
+import { type DispatchProps, type StateProps, default as Spot } from '../components/Spot';
 
-import Spot from '../components/Spot';
-
-const mapDispatchToProps = {};
-
-const mapStateToProps = state => ({
+const mapDispatchToProps: DispatchProps = {};
+const mapStateToProps = (state: State): StateProps => ({
   spot: state.spots.selectedSpot,
 });
 

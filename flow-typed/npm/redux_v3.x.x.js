@@ -8,8 +8,11 @@ declare module 'redux' {
     A = Action
 
   */
-
-  declare type Dispatch<A: { type: $Subtype<string> }> = (action: A) => A;
+  /* NEW: We create a few extra action and dispatch types */
+  declare type ThunkAction<S, R> = (dispatch: Dispatch<S, any>, getState: () => S) => R;
+  declare type ThunkDispatch<S> = <R>(action: ThunkAction<S, R>) => R;
+  declare type PlainDispatch<A: { +type: $Subtype<string> }> = (action: A) => A;
+  declare type Dispatch<S, A> = PlainDispatch<A> & ThunkDispatch<S>;
 
   declare type MiddlewareAPI<S, A> = {
     dispatch: Dispatch<A>,
@@ -20,7 +23,7 @@ declare module 'redux' {
 
   declare type Store<S, A> = {
     // rewrite MiddlewareAPI members in order to get nicer error messages (intersections produce long messages)
-    dispatch: Dispatch<A>,
+    dispatch: Dispatch<S, A>,
     getState(): S,
     subscribe(listener: () => void): () => void,
     replaceReducer(nextReducer: Reducer<S, A>): void,

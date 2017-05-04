@@ -1,6 +1,7 @@
 // @flow
 import fetch from 'isomorphic-fetch';
-export async function getPosts () {
+import { type Post } from '../modules/posts';
+export async function getPosts (): Promise<Post[]> {
   const response = await fetch('/api/posts', {
     method: 'GET',
     headers: {
@@ -10,7 +11,7 @@ export async function getPosts () {
   return await response.json();
 }
 
-export async function getPost (id: number) {
+export async function getPost (id: number): Promise<Post> {
   const response = await fetch(`/api/posts/${id}`, {
     method: 'GET',
     headers: {

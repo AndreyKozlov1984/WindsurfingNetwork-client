@@ -1,10 +1,12 @@
+// @flow
 import { connect } from 'react-redux';
+import { type State } from '~/store/state';
 
-import SpotUsers from '../components/SpotUsers';
+import { default as SpotUsers, type StateProps, type DispatchProps } from '../components/SpotUsers';
 
-const mapDispatchToProps = {};
+const mapDispatchToProps: DispatchProps = {};
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: State): StateProps => ({
   spot: state.spots.selectedUsers,
 });
 

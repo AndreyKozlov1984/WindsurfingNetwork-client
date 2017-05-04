@@ -1,68 +1,154 @@
+// @flow
 import { getDashboardContent, getLookupData } from './api';
+import { type State as GlobalState } from '~/store/state';
 import { globalBus, FIT_BOUNDS } from '~/store/globalBus';
 import _ from 'lodash';
 
-// ------------------------------------
-// Constants
-// ------------------------------------
-export const SET_FILTER_STATE = 'dashboard/SET_FILTER_STATE';
-export const SELECT_ALL = 'dashboard/SELECT_ALL';
-export const SELECT_NONE = 'dashboard/SELECT_NONE';
-export const UPDATE_UI_FILTERS = 'dashboard/UPDATE_UI_FILTERS';
-export const SET_IS_LOADING = 'dashboard/SET_IS_LOADING';
-export const CLEAR_IS_LOADING = 'dashboard/CLEAR_IS_LOADING';
-export const SET_DATA = 'dashboard/SET_DATA';
-export const SET_QUEUED_REQUEST = 'dashboard/SET_QUEUED_REQUEST';
-export const CLEAR_QUEUED_REQUEST = 'dashboard/CLEAR_QUEUED_REQUEST';
-export const SET_MAP_POSITION = 'dashboard/SET_MAP_POSITION';
-export const SET_LOOKUP_DATA = 'dashboard/SET_LOOKUP_DATA';
-export const SELECT_SPOT = 'dashboard/SELECT_SPOT';
-export const SELECT_MARKER = 'dashboard/SELECT_MARKER';
-export const SET_SCROLL = 'dashboard/SET_SCROLL';
+// Exact workaround for object spread...
+type Exact<T> = T & $Shape<T>;
+// But Exact workaround will not allow to do a case on 'type' property
+
+export type DashboardData = Exact<{
+  mapMarkers: Array<Exact<{
+      id: number,
+      lat: number,
+      lng: number,
+    }>>,
+  spots: Array<Exact<{
+      id: number,
+      name: string,
+      country: string,
+      region: ?string,
+      logo: string,
+      usersCount: number,
+      schoolsCount: number,
+      photosCount: number,
+    }>>,
+  activities: Array<Exact<{
+      content: string,
+      date: string,
+      name: string,
+    }>>,
+}>;
+export type LookupData = Exact<{
+  countries: string[],
+}>;
+export type Filters = { [string]: any };
+
+type UpdateUIFiltersAction = {|
+  type: 'dashboard/UPDATE_UI_FILTERS',
+  filterId: string,
+  filterValue: any,
+|};
+type SetIsLoadingAction = {|
+  type: 'dashboard/SET_IS_LOADING',
+|};
+type ClearIsLoadingAction = {|
+  type: 'dashboard/CLEAR_IS_LOADING',
+|};
+type SetDataAction = {|
+  type: 'dashboard/SET_DATA',
+  data: DashboardData,
+|};
+type SetQueuedRequestAction = {|
+  type: 'dashboard/SET_QUEUED_REQUEST',
+|};
+type ClearQueuedRequestAction = {|
+  type: 'dashboard/CLEAR_QUEUED_REQUEST',
+|};
+type SetMapPositionAction = {|
+  type: 'dashboard/SET_MAP_POSITION',
+  center: {|
+    lat: number,
+    lng: number,
+  |},
+  zoom: number,
+|};
+type SetLookupDataAction = {|
+  type: 'dashboard/SET_LOOKUP_DATA',
+  lookupData: LookupData,
+|};
+type SelectSpotAction = {|
+  type: 'dashboard/SELECT_SPOT',
+  spotId: number,
+|};
+type SelectMarkerAction = {|
+  type: 'dashboard/SELECT_MARKER',
+  spotId: number,
+|};
+type SetScrollAction = {|
+  type: 'dashboard/SET_SCROLL',
+  offset: number,
+|};
+
+export type Action =
+  | UpdateUIFiltersAction
+  | SetIsLoadingAction
+  | ClearIsLoadingAction
+  | SetDataAction
+  | SetQueuedRequestAction
+  | ClearQueuedRequestAction
+  | SetMapPositionAction
+  | SetLookupDataAction
+  | SelectSpotAction
+  | SelectMarkerAction
+  | SetScrollAction;
+
+type Dispatch = (action: Action | ThunkAction) => Promise<void>;
+type GetState = () => GlobalState;
+type ThunkAction = (dispatch: Dispatch, getState: GetState) => Promise<void>;
+
+export type State = Exact<{
+  isLoading: boolean,
+  hasQueuedRequest: boolean,
+  scrollToSelected: boolean,
+  center: Exact<{
+    lat: number,
+    lng: number,
+  }>,
+  zoom: number,
+  filters: Filters,
+  data: ?DashboardData,
+  lookupData: ?LookupData,
+  selectedItemId: ?number,
+  scrollPosition: number,
+}>;
 
 // ------------------------------------
-// Actions
+// Thunk Actions
 // ------------------------------------
-export function setFilterState ({ filterId, filterValue }) {
-  return async function (dispatch, getState) {
+export function setFilterState ({ filterId, filterValue }: { filterId: string, filterValue: any }): ThunkAction {
+  return async function (dispatch: Dispatch, getState: GetState): Promise<void> {
     dispatch(updateUiFilters({ filterId, filterValue }));
     dispatch(reload());
     // reloadMap
   };
 }
 
-export function initOrResume () {
-  return async function (dispatch, getState) {
+export function initOrResume (): ThunkAction {
+  return async function (dispatch: Dispatch, getState: GetState): Promise<void> {
     if (!getState().dashboard.data) {
       dispatch(init());
     }
   };
 }
 
-export function init () {
-  return async function (dispatch, getState) {
-    console.info('dashboard init!');
+export function init (): ThunkAction {
+  return async function (dispatch: Dispatch, getState: GetState): Promise<void> {
     dispatch(loadLookup());
     dispatch(reload());
   };
 }
-export function loadLookup () {
-  return async function (dispatch, getState) {
+export function loadLookup (): ThunkAction {
+  return async function (dispatch: Dispatch, getState: GetState): Promise<void> {
     const data = await getLookupData();
     dispatch(setLookupData(data));
     dispatch(reload());
   };
 }
 
-export function setLookupData (data) {
-  return {
-    type: SET_LOOKUP_DATA,
-    data: data,
-  };
-}
-
-export function reload () {
-  return async function (dispatch, getState) {
+export function reload (): ThunkAction {
+  return async function (dispatch: Dispatch, getState: GetState): Promise<void> {
     const isLoading = () => getState().dashboard.isLoading;
     const hasQueuedRequest = () => getState().dashboard.hasQueuedRequest;
     if (!isLoading()) {
@@ -85,243 +171,225 @@ export function reload () {
   };
 }
 
-export function clearQueuedRequest () {
+// --------------
+// Normal Actions
+// --------------
+
+export function setLookupData (lookupData: LookupData): SetLookupDataAction {
   return {
-    type: CLEAR_QUEUED_REQUEST,
+    type: 'dashboard/SET_LOOKUP_DATA',
+    lookupData: lookupData,
   };
 }
 
-export function setQueuedRequest () {
+export function clearQueuedRequest (): ClearQueuedRequestAction {
   return {
-    type: SET_QUEUED_REQUEST,
+    type: 'dashboard/CLEAR_QUEUED_REQUEST',
   };
 }
 
-export function updateUiFilters ({ filterId, filterValue }) {
+export function setQueuedRequest (): SetQueuedRequestAction {
   return {
-    type: UPDATE_UI_FILTERS,
+    type: 'dashboard/SET_QUEUED_REQUEST',
+  };
+}
+
+export function updateUiFilters ({
+  filterId,
+  filterValue,
+}: { filterId: string, filterValue: any }): UpdateUIFiltersAction {
+  return {
+    type: 'dashboard/UPDATE_UI_FILTERS',
     filterId,
     filterValue,
   };
 }
 
-export function selectAll () {
+export function selectSpot (spotId: number): SelectSpotAction {
   return {
-    type: SELECT_ALL,
-  };
-}
-
-export function selectNone () {
-  return {
-    type: SELECT_NONE,
-  };
-}
-
-export function selectSpot (spotId) {
-  return {
-    type: SELECT_SPOT,
+    type: 'dashboard/SELECT_SPOT',
     spotId: spotId,
   };
 }
 
-export function selectMarker (spotId) {
+export function selectMarker (spotId: number): SelectMarkerAction {
   return {
-    type: SELECT_MARKER,
+    type: 'dashboard/SELECT_MARKER',
     spotId: spotId,
   };
 }
 
-export function setScroll (offset) {
+export function setScroll (offset: number): SetScrollAction {
   return {
-    type: SET_SCROLL,
+    type: 'dashboard/SET_SCROLL',
     offset: offset,
   };
 }
 
-export function setIsLoading () {
+export function setIsLoading (): SetIsLoadingAction {
   return {
-    type: SET_IS_LOADING,
+    type: 'dashboard/SET_IS_LOADING',
   };
 }
 
-export function clearIsLoading () {
+export function clearIsLoading (): ClearIsLoadingAction {
   return {
-    type: CLEAR_IS_LOADING,
+    type: 'dashboard/CLEAR_IS_LOADING',
   };
 }
 
-export function setData (data) {
+export function setData (data: DashboardData): SetDataAction {
   return {
-    type: SET_DATA,
+    type: 'dashboard/SET_DATA',
     data: data,
   };
 }
 
-export function setMapPosition (mapPosition) {
+export function setMapPosition ({
+  center,
+  zoom,
+}: { center: {| lat: number, lng: number |}, zoom: number }): SetMapPositionAction {
   return {
-    type: SET_MAP_POSITION,
-    ...mapPosition,
+    type: 'dashboard/SET_MAP_POSITION',
+    center,
+    zoom,
   };
 }
-
-export const actions = {
-  setFilterState,
-  selectAll,
-  selectNone,
-  updateUiFilters,
-  setIsLoading,
-  clearIsLoading,
-  setData,
-  setMapPosition,
-};
 
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
-const ACTION_HANDLERS = {
-  [UPDATE_UI_FILTERS]: function (state, action) {
+const updateUIFiltersHandler = function (state: State, action: UpdateUIFiltersAction): State {
+  return {
+    ...state,
+    filters: {
+      ...state.filters,
+      [action.filterId]: action.filterValue,
+    },
+  };
+};
+const setIsLoadingHandler = function (state: State, action: SetIsLoadingAction): State {
+  return { ...state, isLoading: true };
+};
+const clearIsLoadingHandler = function (state: State, action: ClearIsLoadingAction): State {
+  return { ...state, isLoading: false };
+};
+const setQueuedRequestHandler = function (state: State, action: SetQueuedRequestAction): State {
+  return { ...state, hasQueuedRequest: true };
+};
+const clearQueuedRequestHandler = function (state: State, action: ClearQueuedRequestAction): State {
+  return { ...state, hasQueuedRequest: false };
+};
+const setDataHandler = function (state: State, action: SetDataAction) {
+  return {
+    ...state,
+    data: action.data,
+  };
+};
+const setMapPositionHandler = function (state: State, action: SetMapPositionAction): State {
+  return {
+    ...state,
+    center: action.center,
+    zoom: action.zoom,
+  };
+};
+const setLookupDataHandler = function (state: State, action: SetLookupDataAction) {
+  return {
+    ...state,
+    lookupData: action.lookupData,
+  };
+};
+const selectSpotHandler = function (state: State, action: SelectSpotAction) {
+  if (!state.data) {
+    return state;
+  }
+  const selectedItem = _.find(state.data.mapMarkers, { id: action.spotId });
+  if (selectedItem) {
     return {
       ...state,
-      filters: {
-        ...state.filters,
-        [action.filterId]: action.filterValue,
+      center: {
+        lat: selectedItem.lat,
+        lng: selectedItem.lng,
       },
+      zoom: state.zoom < 12 ? 12 : state.zoom,
+      selectedItemId: action.spotId,
     };
-  },
-  [SELECT_ALL]: function (state, action) {
+  } else {
     return {
       ...state,
-      filters: {
-        ...state.filters,
-        water: {
-          kind1: true,
-          kind2: true,
-          kind3: true,
-          kind4: true,
-        },
-        beach: {
-          sandy: true,
-          rocky: true,
-        },
-      },
+      selectedItemId: null,
     };
-  },
-  [SELECT_NONE]: function (state, action) {
+  }
+};
+const selectMarkerHandler = function (state: State, action: SelectMarkerAction): State {
+  if (!state.data) {
+    return state;
+  }
+  const selectedItem = _.find(state.data.mapMarkers, { id: action.spotId });
+  if (selectedItem) {
     return {
       ...state,
-      filters: {
-        ...state.filters,
-        water: {
-          kind1: false,
-          kind2: false,
-          kind3: false,
-          kind4: false,
-        },
-        beach: {
-          sandy: false,
-          rocky: false,
-        },
-      },
+      selectedItemId: action.spotId,
+      scrollToSelected: true,
     };
-  },
-  [SET_IS_LOADING]: function (state, action) {
-    return { ...state, isLoading: true };
-  },
-  [CLEAR_IS_LOADING]: function (state, action) {
-    return { ...state, isLoading: false };
-  },
-  [SET_QUEUED_REQUEST]: function (state, action) {
-    return { ...state, hasQueuedRequest: true };
-  },
-  [CLEAR_QUEUED_REQUEST]: function (state, action) {
-    return { ...state, hasQueuedRequest: false };
-  },
-  [SET_DATA]: function (state, action) {
+  } else {
     return {
       ...state,
-      data: action.data,
+      selectedItemId: null,
     };
-  },
-  [SET_MAP_POSITION]: function (state, action) {
-    console.info(action);
-    return {
-      ...state,
-      map: {
-        ...state.map,
-        center: action.center,
-        zoom: action.zoom,
-      },
-    };
-  },
-  [SET_LOOKUP_DATA]: function (state, action) {
-    return {
-      ...state,
-      lookup: action.data,
-    };
-  },
-  [SELECT_SPOT]: function (state, action) {
-    const selectedItem = _.find(state.data.mapMarkers, { id: action.spotId });
-    if (selectedItem) {
-      return {
-        ...state,
-        map: {
-          ...state.map,
-          center: {
-            lat: +selectedItem.lat,
-            lng: +selectedItem.lng,
-          },
-          zoom: state.map.zoom < 12 ? 12 : state.map.zoom,
-        },
-        selectedItemId: action.spotId,
-      };
-    } else {
-      return {
-        ...state,
-        selectedItemId: null,
-      };
-    }
-  },
-  [SELECT_MARKER]: function (state, action) {
-    const selectedItem = _.find(state.data.mapMarkers, { id: action.spotId });
-    if (selectedItem) {
-      return {
-        ...state,
-        selectedItemId: action.spotId,
-        scrollToSelected: true,
-      };
-    } else {
-      return {
-        ...state,
-        selectedItemId: null,
-      };
-    }
-  },
-  [SET_SCROLL]: function (state, action) {
-    return {
-      ...state,
-      scrollPosition: action.offset,
-      scrollToSelected: false,
-    };
-  },
+  }
+};
+const setScrollHandler = function (state: State, action: SetScrollAction) {
+  return {
+    ...state,
+    scrollPosition: action.offset,
+    scrollToSelected: false,
+  };
 };
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
-const initialState = {
+const initialState: State = {
+  data: null,
+  lookupData: null,
   isLoading: false,
-  map: {
-    center: { lat: 23.34, lng: 34.45 },
-    zoom: 3,
-  },
+  hasQueuedRequest: false,
+  center: { lat: 23.34, lng: 34.45 },
+  zoom: 3,
   filters: {},
   selectedItemId: null,
+  scrollToSelected: false,
   scrollPosition: 0,
 };
 
-export default function dashboardReducer (state = initialState, action) {
-  const handler = ACTION_HANDLERS[action.type];
-
-  return handler ? handler(state, action) : state;
+export default function dashboardReducer (state: State = initialState, action: Action): State {
+  switch (action.type) {
+    case 'dashboard/UPDATE_UI_FILTERS':
+      return updateUIFiltersHandler(state, action);
+    case 'dashboard/SET_IS_LOADING':
+      return setIsLoadingHandler(state, action);
+    case 'dashboard/CLEAR_IS_LOADING':
+      return clearIsLoadingHandler(state, action);
+    case 'dashboard/SET_QUEUED_REQUEST':
+      return setQueuedRequestHandler(state, action);
+    case 'dashboard/CLEAR_QUEUED_REQUEST':
+      return clearQueuedRequestHandler(state, action);
+    case 'dashboard/SET_DATA':
+      return setDataHandler(state, action);
+    case 'dashboard/SET_MAP_POSITION':
+      return setMapPositionHandler(state, action);
+    case 'dashboard/SET_LOOKUP_DATA':
+      return setLookupDataHandler(state, action);
+    case 'dashboard/SELECT_SPOT':
+      return selectSpotHandler(state, action);
+    case 'dashboard/SELECT_MARKER':
+      return selectMarkerHandler(state, action);
+    case 'dashboard/SET_SCROLL':
+      return setScrollHandler(state, action);
+    default:
+      (action: empty);
+      return state;
+  }
 }
 

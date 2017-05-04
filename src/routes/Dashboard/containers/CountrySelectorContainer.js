@@ -19,7 +19,7 @@ const mapDispatchToProps = {
   },
 };
 
-const getOptions = createSelector([state => state.dashboard.lookup.countries], countries => [
+const getOptions = createSelector([state => state.dashboard.lookupData.countries], countries => [
   { id: '', name: 'All Countries' },
   ...countries.map(c => ({ id: c, name: c })),
 ]);

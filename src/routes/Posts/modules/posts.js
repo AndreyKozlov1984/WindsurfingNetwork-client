@@ -1,27 +1,35 @@
 // @flow
 import { getPosts, getPost } from './api';
+import { type State as GlobalState } from '~/store/state';
 
+export type Comment = {
+  +id: number,
+  +date: string,
+  +logo: string,
+  +content: string,
+  +name: string,
+};
 export type Post = {
-  id: number,
-  comments: Array<Object>,
-  content: string,
-  date: string,
-  image_filename: string,
-  logo: string,
-  name: string,
+  +id: number,
+  +comments: Array<Comment>,
+  +content: string,
+  +date: string,
+  +image_filename: string,
+  +logo: string,
+  +name: string,
 };
 type SetDataAction = {
-  type: 'posts/SET_DATA',
+  +type: 'posts/SET_DATA',
   +data: Array<Post>,
 };
 type SetSelectedAction = {
-  type: 'posts/SET_SELECTED',
+  +type: 'posts/SET_SELECTED',
   +data: Post,
 };
 export type Action = SetDataAction | SetSelectedAction;
-type Dispatch = (action: Action | ThunkAction) => any;
-type GetState = () => Object;
-type ThunkAction = (dispatch: Dispatch, getState: GetState) => any;
+type Dispatch = (action: Action | ThunkAction) => Promise<void>;
+type GetState = () => GlobalState;
+type ThunkAction = (dispatch: Dispatch, getState: GetState) => Promise<void>;
 export type State = {
   +isLoading: boolean,
   +data: ?Array<Post>,
@@ -30,13 +38,13 @@ export type State = {
 
 // Actions
 export function init (): ThunkAction {
-  return async function (dispatch, getState) {
+  return async function (dispatch: Dispatch, getState: GetState): Promise<void> {
     dispatch(reload());
   };
 }
 
 export function fetchPost (id: number): ThunkAction {
-  return async function (dispatch, getState) {
+  return async function (dispatch: Dispatch, getState: GetState): Promise<void> {
     const result = await getPost(id);
     dispatch(setSelected(result));
   };
@@ -50,7 +58,7 @@ export function setSelected (data: Post): SetSelectedAction {
 }
 
 export function reload (): ThunkAction {
-  return async function (dispatch, getState) {
+  return async function (dispatch: Dispatch, getState: GetState): Promise<void> {
     const result = await getPosts();
     dispatch(setData(result));
   };

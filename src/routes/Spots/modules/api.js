@@ -1,5 +1,7 @@
+// @flow
 import fetch from 'isomorphic-fetch';
-export async function getSpot (id) {
+import { type Spot, type SpotForGallery, type SpotForUsers } from './spots';
+export async function getSpot (id: number): Promise<Spot> {
   const response = await fetch(`/api/spots/${id}`, {
     method: 'GET',
     headers: {
@@ -9,7 +11,7 @@ export async function getSpot (id) {
   return await response.json();
 }
 
-export async function getSpotGallery (id) {
+export async function getSpotGallery (id: number): Promise<SpotForGallery> {
   const response = await fetch(`/api/spots/${id}/gallery`, {
     method: 'GET',
     headers: {
@@ -19,7 +21,7 @@ export async function getSpotGallery (id) {
   return await response.json();
 }
 
-export async function getSpotUsers (id) {
+export async function getSpotUsers (id: number): Promise<SpotForUsers> {
   const response = await fetch(`/api/spots/${id}/users`, {
     method: 'GET',
     headers: {

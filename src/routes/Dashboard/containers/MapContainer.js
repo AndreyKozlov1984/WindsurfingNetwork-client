@@ -18,14 +18,14 @@ const getMarkers = createSelector([state => state.dashboard.data.mapMarkers], ma
       },
       key: m.id,
     };
-  }));
+  }),
+);
 
 const mapStateToProps = function (state) {
   console.info(state.dashboard.map);
   return {
-    zoom: state.dashboard.map.zoom,
-    center: state.dashboard.map.center,
-    fitBounds: state.dashboard.map.fitBounds,
+    zoom: state.dashboard.zoom,
+    center: state.dashboard.center,
     markers: getMarkers(state),
   };
 };
