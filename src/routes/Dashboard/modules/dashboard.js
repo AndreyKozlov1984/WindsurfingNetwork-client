@@ -1,34 +1,37 @@
 // @flow
 import { getDashboardContent, getLookupData } from './api';
 import { type State as GlobalState } from '~/store/state';
-import { globalBus, FIT_BOUNDS } from '~/store/globalBus';
+import { fitBoundsBus, scrollToSpotBus } from '~/store/globalBus';
 import _ from 'lodash';
 
 // Exact workaround for object spread...
 type Exact<T> = T & $Shape<T>;
 // But Exact workaround will not allow to do a case on 'type' property
 
+export type MapMarker = Exact<{
+  id: number,
+  lat: number,
+  lng: number,
+}>;
+export type Spot = Exact<{
+  id: number,
+  name: string,
+  country: string,
+  region: ?string,
+  logo: string,
+  usersCount: number,
+  schoolsCount: number,
+  photosCount: number,
+}>;
+export type Activity = Exact<{
+  content: string,
+  date: string,
+  name: string,
+}>;
 export type DashboardData = Exact<{
-  mapMarkers: Array<Exact<{
-      id: number,
-      lat: number,
-      lng: number,
-    }>>,
-  spots: Array<Exact<{
-      id: number,
-      name: string,
-      country: string,
-      region: ?string,
-      logo: string,
-      usersCount: number,
-      schoolsCount: number,
-      photosCount: number,
-    }>>,
-  activities: Array<Exact<{
-      content: string,
-      date: string,
-      name: string,
-    }>>,
+  mapMarkers: MapMarker[],
+  spots: Spot[],
+  activities: Activity[],
 }>;
 export type LookupData = Exact<{
   countries: string[],
@@ -101,7 +104,6 @@ type ThunkAction = (dispatch: Dispatch, getState: GetState) => Promise<void>;
 export type State = Exact<{
   isLoading: boolean,
   hasQueuedRequest: boolean,
-  scrollToSelected: boolean,
   center: Exact<{
     lat: number,
     lng: number,
@@ -159,7 +161,7 @@ export function reload (): ThunkAction {
 
       dispatch(clearIsLoading());
       dispatch(setData(result));
-      globalBus.emit(FIT_BOUNDS);
+      fitBoundsBus.emit({});
 
       if (hasQueuedRequest()) {
         dispatch(clearQueuedRequest());
@@ -168,6 +170,16 @@ export function reload (): ThunkAction {
     } else {
       dispatch(setQueuedRequest());
     }
+  };
+}
+
+export function selectMarker (spotId: number): ThunkAction {
+  return async function (dispatch: Dispatch, getState: GetState): Promise<void> {
+    dispatch({
+      type: 'dashboard/SELECT_MARKER',
+      spotId: spotId,
+    });
+    scrollToSpotBus.emit({ id: spotId });
   };
 }
 
@@ -208,13 +220,6 @@ export function updateUiFilters ({
 export function selectSpot (spotId: number): SelectSpotAction {
   return {
     type: 'dashboard/SELECT_SPOT',
-    spotId: spotId,
-  };
-}
-
-export function selectMarker (spotId: number): SelectMarkerAction {
-  return {
-    type: 'dashboard/SELECT_MARKER',
     spotId: spotId,
   };
 }
@@ -330,7 +335,6 @@ const selectMarkerHandler = function (state: State, action: SelectMarkerAction):
     return {
       ...state,
       selectedItemId: action.spotId,
-      scrollToSelected: true,
     };
   } else {
     return {
@@ -343,7 +347,6 @@ const setScrollHandler = function (state: State, action: SetScrollAction) {
   return {
     ...state,
     scrollPosition: action.offset,
-    scrollToSelected: false,
   };
 };
 
@@ -359,7 +362,6 @@ const initialState: State = {
   zoom: 3,
   filters: {},
   selectedItemId: null,
-  scrollToSelected: false,
   scrollPosition: 0,
 };
 

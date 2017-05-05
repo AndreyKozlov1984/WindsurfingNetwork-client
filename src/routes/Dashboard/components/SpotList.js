@@ -1,34 +1,14 @@
 import React from 'react';
 import Spot from './Spot';
-import jquery from 'jquery';
 import { Panel, ListGroup, ListGroupItem } from 'react-bootstrap';
 
 const SpotList = ({ items, selectedItemId, scrollToSelected, onSelectItem }) => {
-  let selected = null;
-  if (scrollToSelected) {
-    setTimeout(
-      function () {
-        selected.scrollIntoView();
-        const container = jquery(selected).closest('.scroll-container');
-        container.scrollTop(container.scrollTop() - 15);
-      },
-      1,
-    );
-  }
   return (
     <Panel header={`Spots List (${items.length})`}>
       <ListGroup>
         {items.map(item => (
           <ListGroupItem key={item.id} active={item.id === selectedItemId} onClick={() => onSelectItem(item.id)}>
-            <div
-              ref={x => {
-                if (item.id === selectedItemId) {
-                  selected = x;
-                }
-              }}
-            >
-              <Spot {...item} useLinks={item.id === selectedItemId} />
-            </div>
+            <Spot {...item} useLinks={item.id === selectedItemId} />
           </ListGroupItem>
         ))}
       </ListGroup>

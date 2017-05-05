@@ -1,42 +1,56 @@
+// @flow
 import React from 'react';
 import { Media } from 'react-bootstrap';
 import { Link } from 'react-router';
+import { scrollToSpotBus, type ScrollToSpotPayload } from '~/store/globalBus';
+import { type Spot as SpotType } from '../modules/dashboard';
+import autobind from 'autobind-decorator';
+import jquery from 'jquery';
+
+export type DispatchProps = {} & $Shape<{}>;
+export type StateProps = SpotType & {| useLinks: boolean |};
 
 class Spot extends React.PureComponent {
-  static propTypes = {
-    id: React.PropTypes.number.isRequired,
-    name: React.PropTypes.string.isRequired,
-    country: React.PropTypes.string.isRequired,
-    region: React.PropTypes.string.isRequired,
-    logo: React.PropTypes.string.isRequired,
-    usersCount: React.PropTypes.number.isRequired,
-    schoolsCount: React.PropTypes.number.isRequired,
-    photosCount: React.PropTypes.number.isRequired,
-    useLinks: React.PropTypes.bool.isRequired,
-  };
+  element: HTMLElement;
+  props: DispatchProps & StateProps;
+  componentWillMount () {
+    scrollToSpotBus.subscribe(this.scrollIntoView);
+  }
+  componentWillUnmount () {
+    scrollToSpotBus.unsubscribe(this.scrollIntoView);
+  }
+  @autobind scrollIntoView ({ id }: ScrollToSpotPayload) {
+    if (id === this.props.id) {
+      this.element.scrollIntoView();
+      const container = jquery(this.element).closest('.scroll-container');
+      container.scrollTop(container.scrollTop() - 15);
+    }
+  }
   render () {
     return (
-      <Media>
-        <Media.Left align='top'>
-          <img width={64} height={64} src={`/api/usercontent/${this.props.logo}`} alt={this.props.name} />
-        </Media.Left>
-        <Media.Body>
-          <Media.Heading>
-            {this.props.useLinks
-              ? <Link to={`/spots/${this.props.id}`}>
-                {this.props.name}
-              </Link>
-              : <span>{this.props.name}</span>}
-          </Media.Heading>
-          {this.props.country}, {this.props.region}<br />
-          <span>People: </span>
-          <span>{this.props.usersCount}</span>
-          <span>Schools:</span>
-          <span>{this.props.schoolsCount}</span>
-          <span>Photos: </span>
-          <span>{this.props.photosCount}</span>
-        </Media.Body>
-      </Media>
+      <div ref={(ref: HTMLElement) => (this.element = ref)}>
+        <Media>
+          <Media.Left align='top'>
+            <img width={64} height={64} src={`/api/usercontent/${this.props.logo}`} alt={this.props.name} />
+          </Media.Left>
+          <Media.Body>
+            <Media.Heading>
+              {this.props.useLinks
+                ? <Link to={`/spots/${this.props.id}`}>
+                  {this.props.name}
+                </Link>
+                : <span>{this.props.name}</span>}
+            </Media.Heading>
+            {this.props.country}, {this.props.region}<br />
+            <span>People: </span>
+            <span>{this.props.usersCount}</span>
+            <span>Schools:</span>
+            <span>{this.props.schoolsCount}</span>
+            <span>Photos: </span>
+            <span>{this.props.photosCount}</span>
+          </Media.Body>
+        </Media>
+      </div>
     );
   }
 }

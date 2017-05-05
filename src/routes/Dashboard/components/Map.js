@@ -1,28 +1,37 @@
+// @flow
 import React from 'react';
 import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
-import { globalBus, FIT_BOUNDS } from '~/store/globalBus';
+import { fitBoundsBus, type FitBoundsPayload } from '~/store/globalBus';
 import autobind from 'autobind-decorator';
 // import MarkerClusterer from 'react-google-maps/lib/addons/MarkerClusterer';
-/* global google */
+declare var google: any;
 
-// TODO: @autobind on fitBounds / onIdle
-// @listen on a whole component like
-// @listen(FIT_BOUNDS) on a method
+export type StateProps = {
+  zoom: number,
+  center: { lat: number, lng: number },
+  markers: MapMarkerProps[],
+};
+export type DispatchProps = {
+  onMarkerClicked: Function,
+  onMapChanged: Function,
+};
+export type MapMarkerProps = {|
+  position: {|
+    lat: number,
+    lng: number,
+  |},
+  key: number,
+|};
 class MapComponent extends React.PureComponent {
-  static propTypes = {
-    zoom: React.PropTypes.number.isRequired,
-    center: React.PropTypes.object.isRequired,
-    markers: React.PropTypes.array.isRequired,
-    onMarkerClicked: React.PropTypes.func.isRequired,
-    onMapChanged: React.PropTypes.func.isRequired,
-  };
+  map: any;
+  props: DispatchProps & StateProps;
   componentWillMount () {
-    globalBus.on(FIT_BOUNDS, this.fitBounds);
+    fitBoundsBus.subscribe(this.fitBounds);
   }
   componentWillUnmount () {
-    globalBus.off(FIT_BOUNDS, this.fitBounds);
+    fitBoundsBus.unsubscribe(this.fitBounds);
   }
-  @autobind fitBounds () {
+  @autobind fitBounds (payload: FitBoundsPayload) {
     let bounds = new google.maps.LatLngBounds();
     for (let point of this.props.markers) {
       bounds.extend(new google.maps.LatLng(point.position.lat, point.position.lng));
@@ -40,14 +49,14 @@ class MapComponent extends React.PureComponent {
   render () {
     return (
       <GoogleMap
-        ref={map => {
+        ref={(map: any) => {
           this.map = map;
         }}
         zoom={this.props.zoom}
         center={this.props.center}
         onIdle={this.onIdle}
       >
-        {this.props.markers.map(marker => (
+        {this.props.markers.map((marker: MapMarkerProps) => (
           <Marker {...marker} onClick={() => this.props.onMarkerClicked(marker.key)} />
         ))}
       </GoogleMap>
