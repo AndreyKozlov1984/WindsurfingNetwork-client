@@ -1,15 +1,11 @@
+// @flow
 import { connect } from 'react-redux';
-import { setFilterState, selectAll, selectNone } from '../modules/dashboard';
+import { type State } from '~/store/state';
 
-import Dashboard from '../components/Dashboard';
+import { default as Dashboard, type StateProps } from '../components/Dashboard';
 
-const mapDispatchToProps = {
-  setFilterState,
-  selectAll,
-  selectNone,
-};
-
-const mapStateToProps = state => ({
+const mapDispatchToProps = null;
+const mapStateToProps = (state: State): StateProps => ({
   filters: state.dashboard.filters,
   isReady: !!state.dashboard.data,
 });

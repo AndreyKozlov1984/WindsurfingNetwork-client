@@ -1,3 +1,4 @@
+// @flow
 import createContainer from './CheckboxFilterContainer';
 export default createContainer({
   filterId: 'surface',

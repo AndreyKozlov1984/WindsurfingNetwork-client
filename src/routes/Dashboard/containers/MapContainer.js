@@ -11,16 +11,18 @@ const mapDispatchToProps: DispatchProps = {
   onMarkerClicked: selectMarker,
 };
 
-const getMarkers = createSelector([(state: State) => state.dashboard.data.mapMarkers], (markers: MapMarker[]) =>
-  markers.map(function (m: MapMarker): MapMarkerProps {
-    return {
-      position: {
-        lat: m.lat,
-        lng: m.lng,
-      },
-      key: m.id,
-    };
-  }),
+const getMarkers = createSelector(
+  [(state: State) => (state.dashboard.data ? state.dashboard.data.mapMarkers : [])],
+  (markers: MapMarker[]) =>
+    markers.map(function (m: MapMarker): MapMarkerProps {
+      return {
+        position: {
+          lat: m.lat,
+          lng: m.lng,
+        },
+        key: m.id,
+      };
+    }),
 );
 
 const mapStateToProps = function (state: State): StateProps {

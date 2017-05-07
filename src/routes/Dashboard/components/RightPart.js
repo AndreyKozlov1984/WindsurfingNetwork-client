@@ -1,17 +1,27 @@
+// @flow
 import React from 'react';
 import SpotListContainer from '../containers/SpotListContainer';
 import ActivityListContainer from '../containers/ActivityListContainer';
 
-const RightPart = ({ scrollPosition, onScroll }) => {
+export type StateProps = {|
+  scrollPosition: number,
+|};
+export type DispatchProps = {|
+  onScroll: Function,
+|};
+export type Props = {| ...StateProps, ...DispatchProps |};
+const RightPart = ({ scrollPosition, onScroll }: Props) => {
   let scrollContainer = null;
   return (
     <div
       className='layout-right scroll-container'
-      ref={x => {
+      ref={(x: HTMLElement) => {
         scrollContainer = x;
       }}
       onScroll={function () {
-        onScroll(scrollContainer.scrollTop);
+        if (scrollContainer) {
+          onScroll(scrollContainer.scrollTop);
+        }
       }}
       style={{ width: '400px' }}
       scrollTop={scrollPosition}
@@ -20,10 +30,6 @@ const RightPart = ({ scrollPosition, onScroll }) => {
       <ActivityListContainer />
     </div>
   );
-};
-RightPart.propTypes = {
-  scrollPosition: React.PropTypes.number.isRequired,
-  onScroll: React.PropTypes.function,
 };
 export default RightPart;
 

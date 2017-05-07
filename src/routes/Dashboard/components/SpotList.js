@@ -1,12 +1,26 @@
+// @flow
 import React from 'react';
 import Spot from './Spot';
 import { Panel, ListGroup, ListGroupItem } from 'react-bootstrap';
+import { type Spot as SpotType } from '../modules/dashboard';
 
-const SpotList = ({ items, selectedItemId, scrollToSelected, onSelectItem }) => {
+export type StateProps = {|
+  items: SpotType[], selectedItemId: ?number,
+|};
+export type DispatchProps = {|
+ onSelectItem: Function,
+|};
+export type Props = {| ...StateProps, ...DispatchProps |};
+
+const SpotList = ({
+  items,
+  selectedItemId,
+  onSelectItem,
+}: Props) => {
   return (
     <Panel header={`Spots List (${items.length})`}>
       <ListGroup>
-        {items.map(item => (
+        {items.map((item: SpotType) => (
           <ListGroupItem key={item.id} active={item.id === selectedItemId} onClick={() => onSelectItem(item.id)}>
             <Spot {...item} useLinks={item.id === selectedItemId} />
           </ListGroupItem>
@@ -14,13 +28,6 @@ const SpotList = ({ items, selectedItemId, scrollToSelected, onSelectItem }) => 
       </ListGroup>
     </Panel>
   );
-};
-
-SpotList.propTypes = {
-  items: React.PropTypes.array.isRequired,
-  selectedItemId: React.PropTypes.number,
-  scrollToSelected: React.PropTypes.bool,
-  onSelectItem: React.PropTypes.func.isRequired,
 };
 
 export default SpotList;

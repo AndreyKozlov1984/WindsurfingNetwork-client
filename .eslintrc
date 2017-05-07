@@ -37,6 +37,10 @@
     "max-len"              : [2, 120, 2],
     "object-curly-spacing" : [2, "always"],
 
+    "react/no-unused-prop-types": 0, //We use flow
+    "react/prop-types": 0, //We use flow
+
+
     "flowtype/boolean-style": [
       2,
       "boolean"
@@ -58,7 +62,7 @@
       "comma"
     ],
     "flowtype/require-parameter-type": 2,
-    "flowtype/require-return-type": 0, 
+    "flowtype/require-return-type": 0,
     "flowtype/require-valid-file-annotation": 2,
     "flowtype/semi": [
       2,

@@ -1,10 +1,19 @@
+// @flow
 import React from 'react';
 import Activity from './Activity';
 import { Panel } from 'react-bootstrap';
 
-const ActivityList = ({ items }) => (
+import { type Activity as ActivityType } from '../modules/dashboard';
+
+export type DispatchProps = {} & $Exact<{}>;
+export type StateProps = {|
+  items: ActivityType[],
+|};
+type Props = {|...StateProps, ...DispatchProps |};
+
+const ActivityList = ({ items }: Props) => (
   <Panel header='Activity List'>
-    {items.map(item => <Activity key={item.id} {...item} />)}
+    {items.map((item: ActivityType) => <Activity key={item.id} {...item} />)}
   </Panel>
 );
 

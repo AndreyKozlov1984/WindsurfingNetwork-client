@@ -1,32 +1,34 @@
+// @flow
 // We have a set of regions, and a set of countries.
 // A user should be able to choose any region / any country
 import React from 'react';
 import { Panel, FormControl } from 'react-bootstrap';
 
-const CountrySelector = function ({ options, value, onChange }) {
-  const onChangeHandler = function (e) {
+export type Option = {|
+  id: string,
+  name: string,
+|};
+export type StateProps = {|
+  options: Option[],
+  value: string,
+|};
+export type DispatchProps = {|
+  onChange: Function,
+|};
+type Props = {| ...StateProps, ...DispatchProps |};
+const CountrySelector = function ({ options, value, onChange }: Props) {
+  const onChangeHandler = function (e: any) {
     onChange(e.target.value);
   };
   return (
     <Panel header='Country'>
       <FormControl componentClass='select' value={value} placeholder='select' onChange={onChangeHandler}>
-        {options.map(function (option) {
+        {options.map(function (option: Option) {
           return <option value={option.id}>{option.name}</option>;
         })}
       </FormControl>
     </Panel>
   );
-};
-
-CountrySelector.propTypes = {
-  options: React.PropTypes.arrayOf(
-    React.PropTypes.shape({
-      id: React.PropTypes.string.isRequired,
-      name: React.PropTypes.string.isRequired,
-    }),
-  ).isRequired,
-  value: React.PropTypes.object.isRequired,
-  onChange: React.PropTypes.func.isRequired,
 };
 
 export default CountrySelector;

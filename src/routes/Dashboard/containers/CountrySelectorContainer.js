@@ -1,30 +1,31 @@
+// @flow
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { setFilterState } from '../modules/dashboard';
 
-/*  This is a container component. Notice it does not contain any JSX,
-    nor does it import React. This component is **only** responsible for
-    wiring in the actions and state necessary to render a presentational
-    component - in this case, the dashboard:   */
+import { type State } from '~/store/state';
+import {
+  default as CountrySelector,
+  type StateProps,
+  type DispatchProps,
+  type Option,
+} from '../components/CountrySelector';
 
-import CountrySelector from '../components/CountrySelector';
-
-/*  Object of action creators (can also be function that returns object).
-    Keys will be passed as props to presentational components. Here we are
-    implementing our wrapper around increment; the component doesn't care   */
-
-const mapDispatchToProps = {
-  onChange: function (selectedItem) {
+const mapDispatchToProps: DispatchProps = {
+  onChange: function (selectedItem: string) {
     return setFilterState({ filterId: 'country', filterValue: selectedItem });
   },
 };
 
-const getOptions = createSelector([state => state.dashboard.lookupData.countries], countries => [
-  { id: '', name: 'All Countries' },
-  ...countries.map(c => ({ id: c, name: c })),
-]);
+const getOptions = createSelector(
+  [(state: State): string[] => (state.dashboard.lookupData ? state.dashboard.lookupData.countries : [])],
+  (countries: string[]): Option[] => [
+    { id: '', name: 'All Countries' },
+    ...countries.map((c: string) => ({ id: c, name: c })),
+  ],
+);
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: State): StateProps => ({
   options: getOptions(state),
   value: state.dashboard.filters.country,
 });

@@ -1,20 +1,35 @@
+// @flow
 import React from 'react';
 import { mapValues } from 'lodash';
 import { Checkbox, Panel } from 'react-bootstrap';
 
-const CheckboxFilter = function ({ options, value = {}, title, onChange }) {
-  let inputs = {};
-  const onFilterChecked = function (e) {
-    value = mapValues(inputs, input => input.checked);
+export type Option = {|
+  id: string,
+  name: string,
+|};
+export type DispatchProps = {|
+  onChange: Function,
+|};
+export type StateProps = {|
+  value: { [string]: boolean },
+  title: string,
+  options: Option[],
+|};
+type Props = {| ...DispatchProps, ...StateProps |};
+
+const CheckboxFilter = function ({ options, value = {}, title, onChange }: Props) {
+  let inputs: { [string]: HTMLInputElement } = {};
+  const onFilterChecked = function () {
+    value = mapValues(inputs, (input: HTMLInputElement) => input.checked);
     onChange(value);
   };
   return (
     <Panel header={title}>
-      {options.map(function (filter) {
+      {options.map(function (filter: Option) {
         return (
           <Checkbox
             key={filter.id}
-            inputRef={input => {
+            inputRef={(input: HTMLInputElement) => {
               inputs[filter.id] = input;
             }}
             inline
@@ -27,18 +42,6 @@ const CheckboxFilter = function ({ options, value = {}, title, onChange }) {
       })}
     </Panel>
   );
-};
-
-CheckboxFilter.propTypes = {
-  options: React.PropTypes.arrayOf(
-    React.PropTypes.shape({
-      id: React.PropTypes.string.isRequired,
-      name: React.PropTypes.string.isRequired,
-    }),
-  ).isRequired,
-  value: React.PropTypes.object.isRequired,
-  title: React.PropTypes.string.isRequired,
-  onChange: React.PropTypes.func.isRequired,
 };
 
 export default CheckboxFilter;

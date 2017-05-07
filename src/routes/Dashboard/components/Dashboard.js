@@ -1,5 +1,5 @@
+// @flow
 import React from 'react';
-import { Button, Panel } from 'react-bootstrap';
 
 import SurfaceCheckboxFilterContainer from '../containers/SurfaceCheckboxFilterContainer';
 import BeachCheckboxFilterContainer from '../containers/BeachCheckboxFilterContainer';
@@ -13,7 +13,18 @@ import CountrySelectorContainer from '../containers/CountrySelectorContainer';
 import MapContainer from '../containers/MapContainer';
 import RightPartContainer from '../containers/RightPartContainer';
 
-const Dashboard = ({ filters, isReady, selectAll, selectNone }) => {
+import { type Filters } from '../modules/dashboard';
+
+export type StateProps = {|
+  filters: Filters,
+  isReady: boolean,
+|};
+export type DispatchProps = {||};
+type A = { x: 5 };
+({ x: 5 }: { ...A });
+type Props = {| ...StateProps, ...DispatchProps |};
+
+const Dashboard = ({ filters, isReady }: Props) => {
   if (!isReady) {
     return <div>Loading...</div>;
   }
@@ -27,10 +38,6 @@ const Dashboard = ({ filters, isReady, selectAll, selectNone }) => {
         <EntranceCheckboxFilterContainer />
         <BenthalCheckboxFilterContainer />
         <DangerCheckboxFilterContainer />
-        <Panel header='Special'>
-          <Button onClick={selectAll}>Select All</Button>
-          <Button onClick={selectNone}>Select None</Button>
-        </Panel>
         <CountrySelectorContainer />
 
       </div>

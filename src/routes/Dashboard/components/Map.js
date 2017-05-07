@@ -2,19 +2,18 @@
 import React from 'react';
 import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
 import { fitBoundsBus, type FitBoundsPayload } from '~/store/globalBus';
-import autobind from 'autobind-decorator';
 // import MarkerClusterer from 'react-google-maps/lib/addons/MarkerClusterer';
 declare var google: any;
 
-export type StateProps = {
+export type StateProps = {|
   zoom: number,
-  center: { lat: number, lng: number },
+  center: {| lat: number, lng: number |},
   markers: MapMarkerProps[],
-};
-export type DispatchProps = {
+|};
+export type DispatchProps = {|
   onMarkerClicked: Function,
   onMapChanged: Function,
-};
+|};
 export type MapMarkerProps = {|
   position: {|
     lat: number,
@@ -24,14 +23,14 @@ export type MapMarkerProps = {|
 |};
 class MapComponent extends React.PureComponent {
   map: any;
-  props: DispatchProps & StateProps;
+  props: {|...DispatchProps, ... StateProps|};
   componentWillMount () {
     fitBoundsBus.subscribe(this.fitBounds);
   }
   componentWillUnmount () {
     fitBoundsBus.unsubscribe(this.fitBounds);
   }
-  @autobind fitBounds (payload: FitBoundsPayload) {
+  fitBounds = (payload: FitBoundsPayload) => {
     let bounds = new google.maps.LatLngBounds();
     for (let point of this.props.markers) {
       bounds.extend(new google.maps.LatLng(point.position.lat, point.position.lng));
@@ -40,7 +39,7 @@ class MapComponent extends React.PureComponent {
       this.map.fitBounds(bounds);
     }
   }
-  @autobind onIdle () {
+  onIdle = () => {
     this.props.onMapChanged({
       center: { lat: this.map.getCenter().lat(), lng: this.map.getCenter().lng() },
       zoom: this.map.getZoom(),

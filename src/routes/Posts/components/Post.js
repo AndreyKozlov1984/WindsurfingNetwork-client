@@ -4,12 +4,13 @@ import SinglePost from './SinglePost';
 import React from 'react';
 import { type Post } from '../modules/posts';
 
-export type PostProps = {|
+export type StateProps = {|
   data: ?Post,
 |};
+export type DispatchProps = {} & $Exact<{}>;
+export type Props = {| ...DispatchProps, ...StateProps |};
 class PostComponent extends React.PureComponent {
-  props: PostProps;
-  // eslint-disable-next-line flowtype/no-weak-types
+  props: Props;
   render (): React$Element<any> {
     if (!this.props.data) {
       return <div>Loading...</div>;

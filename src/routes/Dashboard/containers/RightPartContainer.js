@@ -1,13 +1,15 @@
+// @flow
 import { connect } from 'react-redux';
 import { setScroll } from '../modules/dashboard';
+import { type State } from '~/store/state';
 
-import RightPart from '../components/RightPart';
+import { default as RightPart, type StateProps, type DispatchProps } from '../components/RightPart';
 
-const mapDispatchToProps = {
+const mapDispatchToProps: DispatchProps = {
   onScroll: setScroll,
 };
 
-const mapStateToProps = function (state) {
+const mapStateToProps = function (state: State): StateProps {
   return {
     scrollPosition: state.dashboard.scrollPosition,
   };

@@ -1,12 +1,14 @@
+// @flow
 import { connect } from 'react-redux';
 
-import ActivityList from '../components/ActivityList';
+import { type State } from '~/store/state';
+import { default as ActivityList, type StateProps, type DispatchProps } from '../components/ActivityList';
 
-const mapDispatchToProps = {};
+const mapDispatchToProps: DispatchProps = {};
 
-const mapStateToProps = function (state) {
+const mapStateToProps = function (state: State): StateProps {
   return {
-    items: state.dashboard.data.activities,
+    items: state.dashboard.data ? state.dashboard.data.activities : [],
   };
 };
 

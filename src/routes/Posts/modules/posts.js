@@ -1,40 +1,41 @@
 // @flow
 import { getPosts, getPost } from './api';
 import { type State as GlobalState } from '~/store/state';
+import cloneState from '~/store/cloneState';
 
-export type Comment = {
-  +id: number,
-  +date: string,
-  +logo: string,
-  +content: string,
-  +name: string,
-};
-export type Post = {
-  +id: number,
-  +comments: Array<Comment>,
-  +content: string,
-  +date: string,
-  +image_filename: string,
-  +logo: string,
-  +name: string,
-};
-type SetDataAction = {
-  +type: 'posts/SET_DATA',
-  +data: Array<Post>,
-};
-type SetSelectedAction = {
-  +type: 'posts/SET_SELECTED',
-  +data: Post,
-};
+export type Comment = {|
+  id: number,
+  date: string,
+  logo: string,
+  content: string,
+  name: string,
+|};
+export type Post = {|
+  id: number,
+  comments: ?Array<Comment>,
+  content: string,
+  date: string,
+  image_filename: string,
+  logo: string,
+  name: string,
+|};
+type SetDataAction = {|
+  type: 'posts/SET_DATA',
+  data: Array<Post>,
+|};
+type SetSelectedAction = {|
+  type: 'posts/SET_SELECTED',
+  data: Post,
+|};
 export type Action = SetDataAction | SetSelectedAction;
 type Dispatch = (action: Action | ThunkAction) => Promise<void>;
 type GetState = () => GlobalState;
 type ThunkAction = (dispatch: Dispatch, getState: GetState) => Promise<void>;
-export type State = {
-  +isLoading: boolean,
-  +data: ?Array<Post>,
-  +selectedPost: ?Post,
-};
+export type State = {|
+  isLoading: boolean,
+  data: ?Array<Post>,
+  selectedPost: ?Post,
+|};
 
 // Actions
 export function init (): ThunkAction {
@@ -75,16 +76,14 @@ export function setData (data: Array<Post>): SetDataAction {
 // Action Handlers
 // ------------------------------------
 const SetDataHandler = function (state: State, action: SetDataAction): State {
-  return {
-    ...state,
+  return cloneState(state, {
     data: action.data,
-  };
+  });
 };
 const SetSelectedHandler = function (state: State, action: SetSelectedAction): State {
-  return {
-    ...state,
+  return cloneState(state, {
     selectedPost: action.data,
-  };
+  });
 };
 
 // ------------------------------------

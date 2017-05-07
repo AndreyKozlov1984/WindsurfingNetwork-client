@@ -7,12 +7,10 @@ import { type Spot as SpotType } from '../modules/dashboard';
 import autobind from 'autobind-decorator';
 import jquery from 'jquery';
 
-export type DispatchProps = {} & $Shape<{}>;
-export type StateProps = SpotType & {| useLinks: boolean |};
+export type PropsType = {| ...SpotType, useLinks: boolean |};
 
-class Spot extends React.PureComponent {
+class Spot extends React.PureComponent<*, PropsType, *> {
   element: HTMLElement;
-  props: DispatchProps & StateProps;
   componentWillMount () {
     scrollToSpotBus.subscribe(this.scrollIntoView);
   }

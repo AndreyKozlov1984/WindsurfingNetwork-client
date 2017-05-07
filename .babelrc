@@ -3,6 +3,6 @@
       ["transform-decorators-legacy"],
       ["transform-async-to-generator"],
       ["transform-promise-to-bluebird"],
-      ["babel-plugin-root-import", {"rootPathSuffix": "src" }]
+      ["babel-plugin-root-import", {"rootPathSuffix": "src" }],
   ]
 }

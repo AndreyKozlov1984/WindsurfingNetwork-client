@@ -2,18 +2,15 @@
 import { getDashboardContent, getLookupData } from './api';
 import { type State as GlobalState } from '~/store/state';
 import { fitBoundsBus, scrollToSpotBus } from '~/store/globalBus';
+import cloneState from '~/store/cloneState';
 import _ from 'lodash';
 
-// Exact workaround for object spread...
-type Exact<T> = T & $Shape<T>;
-// But Exact workaround will not allow to do a case on 'type' property
-
-export type MapMarker = Exact<{
+export type MapMarker = {|
   id: number,
   lat: number,
   lng: number,
-}>;
-export type Spot = Exact<{
+|};
+export type Spot = {|
   id: number,
   name: string,
   country: string,
@@ -22,20 +19,21 @@ export type Spot = Exact<{
   usersCount: number,
   schoolsCount: number,
   photosCount: number,
-}>;
-export type Activity = Exact<{
+|};
+export type Activity = {|
+  id: number,
   content: string,
   date: string,
   name: string,
-}>;
-export type DashboardData = Exact<{
+|};
+export type DashboardData = {|
   mapMarkers: MapMarker[],
   spots: Spot[],
   activities: Activity[],
-}>;
-export type LookupData = Exact<{
+|};
+export type LookupData = {|
   countries: string[],
-}>;
+|};
 export type Filters = { [string]: any };
 
 type UpdateUIFiltersAction = {|
@@ -101,25 +99,25 @@ type Dispatch = (action: Action | ThunkAction) => Promise<void>;
 type GetState = () => GlobalState;
 type ThunkAction = (dispatch: Dispatch, getState: GetState) => Promise<void>;
 
-export type State = Exact<{
+export type State = {|
   isLoading: boolean,
   hasQueuedRequest: boolean,
-  center: Exact<{
+  center: {|
     lat: number,
     lng: number,
-  }>,
+  |},
   zoom: number,
   filters: Filters,
   data: ?DashboardData,
   lookupData: ?LookupData,
   selectedItemId: ?number,
   scrollPosition: number,
-}>;
+|};
 
 // ------------------------------------
 // Thunk Actions
 // ------------------------------------
-export function setFilterState ({ filterId, filterValue }: { filterId: string, filterValue: any }): ThunkAction {
+export function setFilterState ({ filterId, filterValue }: {| filterId: string, filterValue: any |}): ThunkAction {
   return async function (dispatch: Dispatch, getState: GetState): Promise<void> {
     dispatch(updateUiFilters({ filterId, filterValue }));
     dispatch(reload());
@@ -265,44 +263,37 @@ export function setMapPosition ({
 // Action Handlers
 // ------------------------------------
 const updateUIFiltersHandler = function (state: State, action: UpdateUIFiltersAction): State {
-  return {
-    ...state,
-    filters: {
-      ...state.filters,
+  return cloneState(state, {
+    filters: cloneState(state.filters, {
       [action.filterId]: action.filterValue,
-    },
-  };
+    }),
+  });
 };
 const setIsLoadingHandler = function (state: State, action: SetIsLoadingAction): State {
-  return { ...state, isLoading: true };
+  return cloneState(state, { isLoading: true });
 };
 const clearIsLoadingHandler = function (state: State, action: ClearIsLoadingAction): State {
-  return { ...state, isLoading: false };
+  return cloneState(state, { isLoading: false });
 };
 const setQueuedRequestHandler = function (state: State, action: SetQueuedRequestAction): State {
-  return { ...state, hasQueuedRequest: true };
+  return cloneState(state, { hasQueuedRequest: true });
 };
 const clearQueuedRequestHandler = function (state: State, action: ClearQueuedRequestAction): State {
-  return { ...state, hasQueuedRequest: false };
+  return cloneState(state, { hasQueuedRequest: false });
 };
 const setDataHandler = function (state: State, action: SetDataAction) {
-  return {
-    ...state,
-    data: action.data,
-  };
+  return cloneState(state, { data: action.data });
 };
 const setMapPositionHandler = function (state: State, action: SetMapPositionAction): State {
-  return {
-    ...state,
+  return cloneState(state, {
     center: action.center,
     zoom: action.zoom,
-  };
+  });
 };
 const setLookupDataHandler = function (state: State, action: SetLookupDataAction) {
-  return {
-    ...state,
+  return cloneState(state, {
     lookupData: action.lookupData,
-  };
+  });
 };
 const selectSpotHandler = function (state: State, action: SelectSpotAction) {
   if (!state.data) {
@@ -310,20 +301,18 @@ const selectSpotHandler = function (state: State, action: SelectSpotAction) {
   }
   const selectedItem = _.find(state.data.mapMarkers, { id: action.spotId });
   if (selectedItem) {
-    return {
-      ...state,
+    return cloneState(state, {
       center: {
         lat: selectedItem.lat,
         lng: selectedItem.lng,
       },
       zoom: state.zoom < 12 ? 12 : state.zoom,
       selectedItemId: action.spotId,
-    };
+    });
   } else {
-    return {
-      ...state,
+    return cloneState(state, {
       selectedItemId: null,
-    };
+    });
   }
 };
 const selectMarkerHandler = function (state: State, action: SelectMarkerAction): State {
@@ -332,22 +321,19 @@ const selectMarkerHandler = function (state: State, action: SelectMarkerAction):
   }
   const selectedItem = _.find(state.data.mapMarkers, { id: action.spotId });
   if (selectedItem) {
-    return {
-      ...state,
+    return cloneState(state, {
       selectedItemId: action.spotId,
-    };
+    });
   } else {
-    return {
-      ...state,
+    return cloneState(state, {
       selectedItemId: null,
-    };
+    });
   }
 };
 const setScrollHandler = function (state: State, action: SetScrollAction) {
-  return {
-    ...state,
+  return cloneState(state, {
     scrollPosition: action.offset,
-  };
+  });
 };
 
 // ------------------------------------

@@ -1,6 +1,10 @@
+// @flow
 import React from 'react';
 
-const Activity = ({ name, content, date }) => (
+import { type Activity as ActivityType } from '../modules/dashboard';
+
+export type Props = {|...ActivityType|};
+const Activity = ({ name, content, date }: Props) => (
   <div>
     <div>
       <span>Spot: </span><span />
@@ -12,12 +16,6 @@ const Activity = ({ name, content, date }) => (
     </div>
   </div>
 );
-
-Activity.propTypes = {
-  name: React.PropTypes.string.isRequired,
-  content: React.PropTypes.string.isRequired,
-  date: React.PropTypes.string.isRequired,
-};
 
 export default Activity;
 
