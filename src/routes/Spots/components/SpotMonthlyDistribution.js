@@ -10,6 +10,7 @@ const SpotMonthlyDistribution = ({ distribution }: { distribution: number[] }) =
       {_.range(12).map(function (month: number) {
         return (
           <div
+            key={month}
             style={{
               position: 'absolute',
               width: `${columnWidth}%`,

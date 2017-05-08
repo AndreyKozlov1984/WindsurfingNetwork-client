@@ -26,7 +26,7 @@ class AppContainer extends Component {
     return (
       <Provider store={store}>
         <div style={{ height: '100%' }}>
-          <Router history={history} children={routes} />
+          <Router history={history} routes={routes} />
         </div>
       </Provider>
     );

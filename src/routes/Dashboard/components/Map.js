@@ -57,7 +57,7 @@ class MapComponent extends React.PureComponent {
         onIdle={this.onIdle}
       >
         {this.props.markers.map((marker: MapMarkerProps) => (
-          <Marker {...marker} onClick={() => this.props.onMarkerClicked(marker.key)} />
+          <Marker {...marker} key={marker.key} onClick={() => this.props.onMarkerClicked(marker.key)} />
         ))}
       </GoogleMap>
     );

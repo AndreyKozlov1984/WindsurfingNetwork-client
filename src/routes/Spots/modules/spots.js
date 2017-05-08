@@ -39,6 +39,7 @@ export type SpotForGallery = {|
 |};
 
 export type User = {|
+  id: number,
   logo: string,
   name: string,
   country: ?string,

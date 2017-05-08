@@ -30,7 +30,7 @@ const SpotUsers = ({ spot }: Props) => {
       <div className='layout-middle'>
         <ListGroup>
           {spot.users.map((user: UserType) => (
-            <ListGroupItem>
+            <ListGroupItem key={user.id}>
               <Media>
                 <Media.Left>
                   <img width={64} height={64} src={`/api/usercontent/${user.logo}`} />

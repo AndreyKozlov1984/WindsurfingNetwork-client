@@ -79,9 +79,9 @@ const Spot = ({ spot }: Props) => {
             </div>
             <div className='panel-body'>
               <Carousel indicators={false} interval={100400}>
-                {spot.photos.slice(0, 10).map(function (photo: string) {
+                {spot.photos.slice(0, 10).map(function (photo: string, index: number) {
                   return (
-                    <Carousel.Item style={{ height: '300px' }}>
+                    <Carousel.Item key={index} style={{ height: '300px' }}>
                       <div
                         className='photo'
                         style={{
@@ -96,12 +96,12 @@ const Spot = ({ spot }: Props) => {
 
                 {spot.photos.length > 10
                   ? <Carousel.Item style={{ height: '300px' }}>
-                    <Link to={`/spots/${spot.id}/gallery`}>
-                      <h2 style={{ ...centerStyles }}>
+                      <Link to={`/spots/${spot.id}/gallery`}>
+                        <h2 style={{ ...centerStyles }}>
                           View {spot.photos.length - 10} remaining photos
                         </h2>
-                    </Link>
-                  </Carousel.Item>
+                      </Link>
+                    </Carousel.Item>
                   : ''}
               </Carousel>
 
@@ -120,7 +120,7 @@ const Spot = ({ spot }: Props) => {
           <Panel header='Schools'>
             {spot.schools.map(function (school: SchoolType) {
               return (
-                <Media>
+                <Media key={school.id}>
                   <Media.Left>
                     <img width={64} height={64} src={`/api/usercontent/${school.logo}`} />
                   </Media.Left>
@@ -142,16 +142,17 @@ const Spot = ({ spot }: Props) => {
                 .slice(0, 10)
                 .map((user: UserType) => (
                   <img
+                    key={user.id}
                     style={{ position: 'inline-block', width: 90, height: 90, margin: 10 }}
                     src={`/api/usercontent/${user.logo}`}
                   />
                 ))}
               {spot.users.length > 10
                 ? <Link to={`/spots/${spot.id}/users`}>
-                  <h4 style={{ textAlign: 'center' }}>
-                    <Link to={`/spots/${spot.id}/users`}>View {spot.users.length - 10} more users</Link>
-                  </h4>
-                </Link>
+                    <h4 style={{ textAlign: 'center' }}>
+                      <Link to={`/spots/${spot.id}/users`}>View {spot.users.length - 10} more users</Link>
+                    </h4>
+                  </Link>
                 : ''}
             </div>
           </div>

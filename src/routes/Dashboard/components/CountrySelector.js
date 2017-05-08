@@ -24,7 +24,7 @@ const CountrySelector = function ({ options, value, onChange }: Props) {
     <Panel header='Country'>
       <FormControl componentClass='select' value={value} placeholder='select' onChange={onChangeHandler}>
         {options.map(function (option: Option) {
-          return <option value={option.id}>{option.name}</option>;
+          return <option key={option.id} value={option.id}>{option.name}</option>;
         })}
       </FormControl>
     </Panel>

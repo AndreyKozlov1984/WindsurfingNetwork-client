@@ -81,8 +81,8 @@ const SpotGallery = ({ spot, selectedMonth }: Props) => {
         <Panel header='Photos per month'>
           <ListGroup>
             {months.map((monthInfo: MonthInfo) => (
-              <LinkContainer to={monthInfo.href}>
-                <ListGroupItem style={{ outline: 0 }} key={monthInfo.id} active={monthInfo.id === selectedMonth}>
+              <LinkContainer key={monthInfo.id} to={monthInfo.href}>
+                <ListGroupItem style={{ outline: 0 }} active={monthInfo.id === selectedMonth}>
                   {monthInfo.text}
                 </ListGroupItem>
               </LinkContainer>

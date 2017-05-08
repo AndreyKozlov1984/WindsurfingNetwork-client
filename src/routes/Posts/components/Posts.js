@@ -15,7 +15,7 @@ const Posts = ({ data }: Props): React$Element<any> => {
     <div style={{ overflowY: 'auto', height: '100%' }}>
       <Grid>
         <h2>Posts</h2>
-        {data.map((post: PostType) => <SinglePost {...post} />)}
+        {data.map((post: PostType) => <SinglePost key={post.id} {...post} />)}
       </Grid>
     </div>
   );
