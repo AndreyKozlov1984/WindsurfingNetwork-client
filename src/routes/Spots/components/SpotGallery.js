@@ -1,4 +1,5 @@
 // @flow
+
 import React from 'react';
 import { Panel, Breadcrumb, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -11,16 +12,17 @@ import {
   type Photo as PhotoType,
 } from '../modules/spots';
 
-export type DispatchProps = {} & $Shape<{}>;
+export type DispatchProps = {} & $Exact<{}>;
 export type StateProps = {| spot: ?SpotForGalleryType, selectedMonth: ?number |};
+type Props = {| ...StateProps, ...DispatchProps |};
 
-type MonthInfo = {
+type MonthInfo = {|
   id: ?number,
   text: string,
   href: string,
-};
+|};
 
-const getMonthInfo = (spot: SpotForGalleryType, selectedMonth: ?number) =>
+const getMonthInfo = (spot: SpotForGalleryType, selectedMonth: ?number): MonthInfo[] =>
   [
     {
       id: null,
@@ -37,7 +39,7 @@ const getMonthInfo = (spot: SpotForGalleryType, selectedMonth: ?number) =>
     }),
   );
 
-const SpotGallery = ({ spot, selectedMonth }: DispatchProps & StateProps) => {
+const SpotGallery = ({ spot, selectedMonth }: Props) => {
   if (!spot) {
     return <div>Loading...</div>;
   }

@@ -2,7 +2,9 @@
 import { getSpot, getSpotGallery, getSpotUsers } from './api';
 import { type State as GlobalState } from '~/store/state';
 
-export type Spot = {
+import cloneState from '~/store/cloneState';
+
+export type Spot = {|
   lat: number,
   lng: number,
   id: number,
@@ -15,74 +17,74 @@ export type Spot = {
   photos: Array<string>,
   users: Array<User>,
   schools: Array<School>,
-};
+|};
 
-export type SpotForUsers = {
-  +id: number,
-  +name: string,
-  +users: User[],
-};
+export type SpotForUsers = {|
+  id: number,
+  name: string,
+  users: User[],
+|};
 
-export type Photo = {
-  +width: number,
-  +height: number,
-  +photo: string,
-};
+export type Photo = {|
+  width: number,
+  height: number,
+  photo: string,
+|};
 export type PhotosByMonth = { [number]: Photo[] };
 
-export type SpotForGallery = {
-  +id: number,
-  +name: string,
-  +photos: PhotosByMonth,
-};
+export type SpotForGallery = {|
+  id: number,
+  name: string,
+  photos: PhotosByMonth,
+|};
 
-export type User = {
+export type User = {|
   logo: string,
   name: string,
   country: ?string,
   city: ?string,
   rating: number,
   photos_count: number,
-};
+|};
 
-export type School = {
+export type School = {|
   id: number,
   logo: string,
   name: string,
-};
+|};
 
-type SetSelectedAction = {
-  +type: 'spots/SET_SELECTED',
-  +data: Spot,
-};
+type SetSelectedAction = {|
+  type: 'spots/SET_SELECTED',
+  data: Spot,
+|};
 
-type SetSelectedGalleryAction = {
-  +type: 'spots/SET_SELECTED_GALLERY',
-  +data: SpotForGallery,
-};
+type SetSelectedGalleryAction = {|
+  type: 'spots/SET_SELECTED_GALLERY',
+  data: SpotForGallery,
+|};
 
-type SetSelectedUsersAction = {
-  +type: 'spots/SET_SELECTED_USERS',
-  +data: SpotForUsers,
-};
+type SetSelectedUsersAction = {|
+  type: 'spots/SET_SELECTED_USERS',
+  data: SpotForUsers,
+|};
 
-type SelectMonthAction = {
-  +type: 'spots/SELECT_MONTH',
-  +month: ?number,
-};
+type SelectMonthAction = {|
+  type: 'spots/SELECT_MONTH',
+  month: ?number,
+|};
 
 // Actions
 export type Action = SetSelectedAction | SetSelectedGalleryAction | SetSelectedUsersAction | SelectMonthAction;
 type Dispatch = (action: Action | ThunkAction) => Promise<void>;
 type GetState = () => GlobalState;
 type ThunkAction = (dispatch: Dispatch, getState: GetState) => Promise<void>;
-export type State = {
+export type State = {|
   isLoading: boolean,
   selectedSpot: ?Spot,
   selectedGallery: ?SpotForGallery,
   selectedMonth: ?number,
   selectedUsers: ?SpotForUsers,
-};
+|};
 
 export function loadGallery ({ spotId, selectedMonth }: { spotId: number, selectedMonth: ?number }): ThunkAction {
   return async function (dispatch: Dispatch, getState: GetState): Promise<void> {
@@ -146,28 +148,16 @@ export function setSelectedGallery (data: SpotForGallery): SetSelectedGalleryAct
 // Action Handlers
 // ------------------------------------
 const setSelectedHandler = function (state: State, action: SetSelectedAction): State {
-  return {
-    ...state,
-    selectedSpot: action.data,
-  };
+  return cloneState(state, { selectedSpot: action.data });
 };
 const setSelectedGalleryHandler = function (state: State, action: SetSelectedGalleryAction): State {
-  return {
-    ...state,
-    selectedGallery: action.data,
-  };
+  return cloneState(state, { selectedGallery: action.data });
 };
 const setSelectedUsersHandler = function (state: State, action: SetSelectedUsersAction): State {
-  return {
-    ...state,
-    selectedUsers: action.data,
-  };
+  return cloneState(state, { selectedUsers: action.data });
 };
 const selectMonthHandler = function (state: State, action: SelectMonthAction): State {
-  return {
-    ...state,
-    selectedMonth: action.month,
-  };
+  return cloneState(state, { selectedMonth: action.month });
 };
 
 // ------------------------------------

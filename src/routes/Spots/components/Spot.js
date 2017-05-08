@@ -9,10 +9,11 @@ import SpotConditions from './SpotConditions';
 import SpotMonthlyDistribution from './SpotMonthlyDistribution';
 import { type Spot as SpotType, type School as SchoolType, type User as UserType } from '../modules/spots';
 
-export type DispatchProps = {} & $Shape<{}>;
+export type DispatchProps = {} & $Exact<{}>;
 export type StateProps = {|
   spot: ?SpotType,
 |};
+export type Props = {| ...StateProps, ...DispatchProps |};
 
 const Map = withGoogleMap(({ spot }: { spot: SpotType }): React$Element<any> => (
   <GoogleMap zoom={12} center={{ lat: spot.lat, lng: spot.lng }}>
@@ -41,7 +42,7 @@ const MonthsAvailability = ({ spot }: { spot: SpotType }) => (
   </Tabs>
 );
 
-const Spot = ({ spot }: DispatchProps & StateProps) => {
+const Spot = ({ spot }: Props) => {
   if (!spot) {
     return <div>Loading...</div>;
   }

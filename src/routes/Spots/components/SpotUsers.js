@@ -3,9 +3,10 @@ import React from 'react';
 import { Breadcrumb, Media, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { type SpotForUsers as SpotForUsersType, type User as UserType } from '../modules/spots';
-export type StateProps = { spot: ?SpotForUsersType };
-export type DispatchProps = {} & $Shape<{}>;
-const SpotUsers = ({ spot }: StateProps & DispatchProps) => {
+export type StateProps = {| spot: ?SpotForUsersType |};
+export type DispatchProps = {} & $Exact<{}>;
+type Props = {| ...StateProps, ...DispatchProps |};
+const SpotUsers = ({ spot }: Props) => {
   if (!spot) {
     return <div>Loading...</div>;
   }
