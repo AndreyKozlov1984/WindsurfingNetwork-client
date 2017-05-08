@@ -9,6 +9,7 @@ import jquery from 'jquery';
 
 export type PropsType = {| ...SpotType, useLinks: boolean |};
 
+/* eslint-disable immutable/no-this */
 class Spot extends React.PureComponent<*, PropsType, *> {
   element: HTMLElement;
   componentWillMount () {
@@ -26,6 +27,8 @@ class Spot extends React.PureComponent<*, PropsType, *> {
   }
   render () {
     return (
+      // prettier-ignore
+      // eslint-disable-next-line immutable/no-mutation
       <div ref={(ref: HTMLElement) => (this.element = ref)}>
         <Media>
           <Media.Left align='top'>
@@ -34,10 +37,10 @@ class Spot extends React.PureComponent<*, PropsType, *> {
           <Media.Body>
             <Media.Heading>
               {this.props.useLinks
-                ? <Link to={`/spots/${this.props.id}`}>
-                  {this.props.name}
-                </Link>
-                : <span>{this.props.name}</span>}
+                  ? <Link to={`/spots/${this.props.id}`}>
+                    {this.props.name}
+                  </Link>
+                  : <span>{this.props.name}</span>}
             </Media.Heading>
             {this.props.country}, {this.props.region}<br />
             <span>People: </span>

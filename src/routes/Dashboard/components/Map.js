@@ -21,9 +21,10 @@ export type MapMarkerProps = {|
   |},
   key: number,
 |};
+/* eslint-disable immutable/no-this */
 class MapComponent extends React.PureComponent {
   map: any;
-  props: {|...DispatchProps, ... StateProps|};
+  props: {| ...DispatchProps, ...StateProps |};
   componentWillMount () {
     fitBoundsBus.subscribe(this.fitBounds);
   }
@@ -31,25 +32,25 @@ class MapComponent extends React.PureComponent {
     fitBoundsBus.unsubscribe(this.fitBounds);
   }
   fitBounds = (payload: FitBoundsPayload) => {
-    let bounds = new google.maps.LatLngBounds();
-    for (let point of this.props.markers) {
+    const bounds = new google.maps.LatLngBounds();
+    this.props.markers.forEach(function (point: MapMarkerProps) {
       bounds.extend(new google.maps.LatLng(point.position.lat, point.position.lng));
-    }
+    });
     if (this.map) {
       this.map.fitBounds(bounds);
     }
-  }
+  };
   onIdle = () => {
     this.props.onMapChanged({
       center: { lat: this.map.getCenter().lat(), lng: this.map.getCenter().lng() },
       zoom: this.map.getZoom(),
     });
-  }
+  };
   render () {
     return (
       <GoogleMap
         ref={(map: any) => {
-          this.map = map;
+          this.map = map; // eslint-disable-line immutable/no-mutation
         }}
         zoom={this.props.zoom}
         center={this.props.center}
@@ -62,5 +63,6 @@ class MapComponent extends React.PureComponent {
     );
   }
 }
+/* eslint-enable immutables/no-this */
 export default withGoogleMap(MapComponent);
 

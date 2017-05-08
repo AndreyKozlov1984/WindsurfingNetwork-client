@@ -9,6 +9,7 @@ export type StateProps = {|
 |};
 export type DispatchProps = {} & $Exact<{}>;
 export type Props = {| ...DispatchProps, ...StateProps |};
+/* eslint-disable immutable/no-this */
 class PostComponent extends React.PureComponent {
   props: Props;
   render (): React$Element<any> {
@@ -25,6 +26,7 @@ class PostComponent extends React.PureComponent {
     );
   }
 }
+/* eslint-enable immutable/no-this */
 
 export default PostComponent;
 

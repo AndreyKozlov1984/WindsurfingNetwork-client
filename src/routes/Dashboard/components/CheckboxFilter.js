@@ -18,7 +18,7 @@ export type StateProps = {|
 type Props = {| ...DispatchProps, ...StateProps |};
 
 const CheckboxFilter = function ({ options, value = {}, title, onChange }: Props) {
-  let inputs: { [string]: HTMLInputElement } = {};
+  const inputs: { [string]: HTMLInputElement } = {};
   const onFilterChecked = function () {
     value = mapValues(inputs, (input: HTMLInputElement) => input.checked);
     onChange(value);
@@ -30,7 +30,7 @@ const CheckboxFilter = function ({ options, value = {}, title, onChange }: Props
           <Checkbox
             key={filter.id}
             inputRef={(input: HTMLInputElement) => {
-              inputs[filter.id] = input;
+              inputs[filter.id] = input; // eslint-disable-line immutable/no-mutation
             }}
             inline
             checked={value[filter.id]}

@@ -8,6 +8,7 @@ import { type State } from '~/store/state';
 import { type Action } from '~/store/action';
 import { type RouteConfig } from '~/routes/types';
 
+/* eslint-disable immutable/no-this */
 class AppContainer extends Component {
   props: {
     routes: RouteConfig,
@@ -31,6 +32,7 @@ class AppContainer extends Component {
     );
   }
 }
+/* eslint-enable immutable/no-this */
 
 export default AppContainer;
 

@@ -40,6 +40,10 @@
     "react/no-unused-prop-types": 0, //We use flow
     "react/prop-types": 0, //We use flow
 
+    "immutable/no-let": 2,
+    "immutable/no-mutation": 2,
+    "immutable/no-this": 2,
+
 
     "flowtype/boolean-style": [
       2,

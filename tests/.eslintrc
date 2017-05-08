@@ -7,5 +7,10 @@
     "expect" : false,
     "should" : false,
     "sinon"  : false
+  },
+  "rules": {
+    "immutable/no-let": 0,
+    "immutable/no-mutation": 0,
+    "immutable/no-this": 0,
   }
 }

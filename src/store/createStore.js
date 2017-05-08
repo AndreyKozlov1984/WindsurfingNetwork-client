@@ -17,15 +17,16 @@ export default (initialState: any = {}): Store<State, Action> => {
   // ======================================================
   const enhancers = [];
 
-  let composeEnhancers = compose;
-
-  declare var __DEV__: boolean;
-  if (__DEV__) {
-    const composeWithDevToolsExtension = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
-    if (typeof composeWithDevToolsExtension === 'function') {
-      composeEnhancers = composeWithDevToolsExtension;
+  const composeEnhancers = (() => {
+    declare var __DEV__: boolean;
+    if (__DEV__) {
+      const composeWithDevToolsExtension = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
+      if (typeof composeWithDevToolsExtension === 'function') {
+        return composeWithDevToolsExtension;
+      }
     }
-  }
+    return compose();
+  })();
 
   // ======================================================
   // Store Instantiation and HMR Setup
@@ -35,7 +36,7 @@ export default (initialState: any = {}): Store<State, Action> => {
     initialState,
     composeEnhancers(applyMiddleware(...middleware), ...enhancers),
   );
-  store.asyncReducers = {};
+  store.asyncReducers = {}; // eslint-disable-line immutable/no-mutation
 
   declare var module: { hot?: { accept: Function } };
   if (module.hot) {

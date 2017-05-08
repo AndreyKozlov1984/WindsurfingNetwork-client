@@ -14,7 +14,7 @@ export const makeRootReducer = (asyncReducers: AsyncReducers = {}): Function => 
 export const injectReducer = (store: Store<State, Action>, { key, reducer }: { key: string, reducer: any }) => {
   if (Object.hasOwnProperty.call(store.asyncReducers, key)) return;
 
-  store.asyncReducers[key] = reducer;
+  store.asyncReducers[key] = reducer; // eslint-disable-line immutable/no-mutation
   store.replaceReducer(makeRootReducer(store.asyncReducers));
 };
 

@@ -4,6 +4,7 @@ import { Badge, Table } from 'react-bootstrap';
 import _ from 'lodash';
 import { propertyNameText, propertyValueText } from '~/utils/formatters';
 import { type Spot as SpotType } from '../modules/spots';
+
 const ConditionElement = function ({ spot, property }: { spot: SpotType, property: string }) {
   const values: { [string]: boolean } = spot[property + '_type'];
   const selectedValues = _.keys(_.pickBy(values));

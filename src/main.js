@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom';
 import createStore from './store/createStore';
 import AppContainer from './containers/AppContainer';
 
-// Perf! making it available in the debugger
+// Perf! making it available in the dev tools
 import Perf from 'react-addons-perf';
-window.Perf = Perf;
+window.Perf = Perf; // eslint-disable-line immutable/no-mutation
 
 // ========================================================
 // Store Instantiation
@@ -18,45 +18,40 @@ const store = createStore(initialState);
 // ========================================================
 const MOUNT_NODE = document.getElementById('root');
 
-let render = () => {
+const render = () => {
   const routes = require('./routes/index').default(store);
-
   ReactDOM.render(<AppContainer store={store} routes={routes} />, MOUNT_NODE);
 };
 
-// This code is excluded from production bundle
-if (__DEV__) {
-  if (module.hot) {
-    // Development render functions
-    const renderApp = render;
-    const renderError = error => {
-      const RedBox = require('redbox-react').default;
+const hotReloadedRender = () => {
+  const renderApp = render;
+  const renderError = error => {
+    const RedBox = require('redbox-react').default;
 
-      ReactDOM.render(<RedBox error={error} />, MOUNT_NODE);
-    };
+    ReactDOM.render(<RedBox error={error} />, MOUNT_NODE);
+  };
 
-    // Wrap render in try/catch
-    render = () => {
-      try {
-        renderApp();
-      } catch (error) {
-        console.error(error);
-        renderError(error);
-      }
-    };
-
-    // Setup hot module replacement
-    module.hot.accept('./routes/index', () =>
-      setImmediate(() => {
-        ReactDOM.unmountComponentAtNode(MOUNT_NODE);
-        render();
-      }),
-    );
+  // Wrap render in try/catch
+  try {
+    renderApp();
+  } catch (error) {
+    console.error(error);
+    renderError(error);
   }
-}
+};
 
-// ========================================================
-// Go!
-// ========================================================
-render();
+// This code is excluded from production bundle
+if (__DEV__ && module.hot) {
+  // Development render functions
+  // Setup hot module replacement
+  module.hot.accept('./routes/index', () =>
+    setImmediate(() => {
+      ReactDOM.unmountComponentAtNode(MOUNT_NODE);
+      render();
+    }),
+  );
+  hotReloadedRender();
+} else {
+  render();
+}
 

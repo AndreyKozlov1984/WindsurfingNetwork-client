@@ -11,7 +11,7 @@ export type DispatchProps = {|
 |};
 export type Props = {| ...StateProps, ...DispatchProps |};
 const RightPart = ({ scrollPosition, onScroll }: Props) => {
-  let scrollContainer = null;
+  let scrollContainer = null; // eslint-disable-line immutable/no-let
   return (
     <div
       className='layout-right scroll-container'

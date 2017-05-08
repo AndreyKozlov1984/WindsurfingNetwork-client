@@ -52,12 +52,5 @@ const Dashboard = ({ filters, isReady }: Props) => {
   );
 };
 
-Dashboard.propTypes = {
-  filters: React.PropTypes.object.isRequired,
-  isReady: React.PropTypes.bool.isRequired,
-  selectAll: React.PropTypes.func.isRequired,
-  selectNone: React.PropTypes.func.isRequired,
-};
-
 export default Dashboard;
 
