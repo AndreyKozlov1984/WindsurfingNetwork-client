@@ -7,6 +7,7 @@ import { type Post as PostType } from '../modules/posts';
 export type StateProps = {| data: PostType[] |};
 export type DispatchProps = {} & $Exact<{}>;
 type Props = {| ...StateProps, ...DispatchProps |};
+
 const Posts = ({ data }: Props): React$Element<any> => {
   if (!data) {
     return <div>Loading...</div>;
