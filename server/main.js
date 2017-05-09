@@ -6,17 +6,31 @@ const webpackConfig = require('../config/webpack.config');
 const project = require('../config/project.config');
 const compress = require('compression');
 const proxy = require('express-http-proxy');
+const bodyParser = require('body-parser')
+const validate = require('./validator');
 
 const app = express();
 
 // Apply gzip compression
 app.use(compress());
+app.use(bodyParser.json({limit: '50mb'}))
 
+// proxy everything
 app.use('/api', proxy('localhost:3001', {
     forwardPath: function(req, res) {
         return '/api' + require('url').parse(req.url).path;
     }
 }));
+
+// experimental flow validator:
+// input: path to the file, line number, value
+// goal: extract expected type from that line, then add a validator and report
+// if there is a cetrain issue.
+app.use('/validate', async function(req, res) {
+    const result = await validate(req.body.file, req.body.line, req.body.jsonValue);
+    res.json(result);
+});
+
 // ------------------------------------
 // Apply Webpack HMR Middleware
 // ------------------------------------

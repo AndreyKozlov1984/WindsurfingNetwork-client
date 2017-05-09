@@ -1,5 +1,6 @@
 // @flow
 import fetch from 'isomorphic-fetch';
+import validate from '~/utils/validator';
 import { type Post } from '../modules/posts';
 export async function getPosts (): Promise<Post[]> {
   const response = await fetch('/api/posts', {
@@ -8,7 +9,9 @@ export async function getPosts (): Promise<Post[]> {
       'Content-Type': 'application/json',
     },
   });
-  return await response.json();
+  const result = await response.json();
+  (validate(__filename, __line, result): Post[]);
+  return result;
 }
 
 export async function getPost (id: number): Promise<Post> {
@@ -18,6 +21,8 @@ export async function getPost (id: number): Promise<Post> {
       'Content-Type': 'application/json',
     },
   });
-  return await response.json();
+  const result = await response.json();
+  (validate(__filename, __line, result): Post);
+  return result;
 }
 

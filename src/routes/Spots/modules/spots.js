@@ -15,8 +15,18 @@ export type Spot = {|
   rating: number,
   monthly_distribution: { [string]: number[] },
   photos: Array<string>,
-  users: Array<User>,
-  schools: Array<School>,
+  users: Array<SimpleUser>,
+  schools: Array<SimpleSchool>,
+|};
+
+export type SimpleUser = {|
+  id: number,
+  logo: string,
+|};
+export type SimpleSchool = {|
+  id: number,
+  logo: string,
+  name: string,
 |};
 
 export type SpotForUsers = {|

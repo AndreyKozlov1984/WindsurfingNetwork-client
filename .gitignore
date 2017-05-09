@@ -1,5 +1,6 @@
 .DS_STORE
 *.log
+flow_validate_*.js
 
 node_modules
 

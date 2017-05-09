@@ -5,6 +5,7 @@ import cloneState from '~/store/cloneState';
 
 export type Comment = {|
   id: number,
+  user_id: number,
   date: string,
   logo: string,
   content: string,
@@ -12,10 +13,10 @@ export type Comment = {|
 |};
 export type Post = {|
   id: number,
-  comments: ?Array<Comment>,
+  comments: Array<Comment>,
   content: string,
   date: string,
-  image_filename: string,
+  image_filename: ?string,
   logo: string,
   name: string,
 |};

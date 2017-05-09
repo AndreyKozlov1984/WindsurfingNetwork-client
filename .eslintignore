@@ -4,3 +4,4 @@ node_modules/**
 dist/**
 src/index.html
 server/**
+**/flow_validate_*

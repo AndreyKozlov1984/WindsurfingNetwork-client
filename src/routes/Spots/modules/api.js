@@ -1,5 +1,6 @@
 // @flow
 import fetch from 'isomorphic-fetch';
+import validate from '~/utils/validator';
 import { type Spot, type SpotForGallery, type SpotForUsers } from './spots';
 export async function getSpot (id: number): Promise<Spot> {
   const response = await fetch(`/api/spots/${id}`, {
@@ -8,7 +9,9 @@ export async function getSpot (id: number): Promise<Spot> {
       'Content-Type': 'application/json',
     },
   });
-  return await response.json();
+  const result = await response.json();
+  (validate(__filename, __line, result): Spot);
+  return result;
 }
 
 export async function getSpotGallery (id: number): Promise<SpotForGallery> {
@@ -18,7 +21,9 @@ export async function getSpotGallery (id: number): Promise<SpotForGallery> {
       'Content-Type': 'application/json',
     },
   });
-  return await response.json();
+  const result = await response.json();
+  (validate(__filename, __line, result): SpotForGallery);
+  return result;
 }
 
 export async function getSpotUsers (id: number): Promise<SpotForUsers> {
@@ -28,6 +33,8 @@ export async function getSpotUsers (id: number): Promise<SpotForUsers> {
       'Content-Type': 'application/json',
     },
   });
-  return await response.json();
+  const result = await response.json();
+  (validate(__filename, __line, result): SpotForUsers);
+  return result;
 }
 

@@ -7,7 +7,7 @@ import _ from 'lodash';
 import { centerStyles } from '~/utils/formatters';
 import SpotConditions from './SpotConditions';
 import SpotMonthlyDistribution from './SpotMonthlyDistribution';
-import { type Spot as SpotType, type School as SchoolType, type User as UserType } from '../modules/spots';
+import { type Spot as SpotType, type School as SchoolType, type SimpleUser as SimpleUserType } from '../modules/spots';
 
 export type DispatchProps = {} & $Exact<{}>;
 export type StateProps = {|
@@ -140,7 +140,7 @@ const Spot = ({ spot }: Props) => {
             <div className='panel-body'>
               {spot.users
                 .slice(0, 10)
-                .map((user: UserType) => (
+                .map((user: SimpleUserType) => (
                   <img
                     key={user.id}
                     style={{ position: 'inline-block', width: 90, height: 90, margin: 10 }}
