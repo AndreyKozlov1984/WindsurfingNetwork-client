@@ -1,7 +1,7 @@
 // @flow
 import fetch from 'isomorphic-fetch';
 import validate from '~/utils/validator';
-import { type Spot, type SpotForGallery, type SpotForUsers } from './spots';
+import { type Spot, type SpotForGallery, type SpotForUsers, type SpotForSchools } from './spots';
 export async function getSpot (id: number): Promise<Spot> {
   const response = await fetch(`/api/spots/${id}`, {
     method: 'GET',
@@ -35,6 +35,18 @@ export async function getSpotUsers (id: number): Promise<SpotForUsers> {
   });
   const result = await response.json();
   (validate(__filename, __line, result): SpotForUsers);
+  return result;
+}
+
+export async function getSpotSchools (id: number): Promise<SpotForSchools> {
+  const response = await fetch(`/api/spots/${id}/schools`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  const result = await response.json();
+  (validate(__filename, __line, result): SpotForSchools);
   return result;
 }
 

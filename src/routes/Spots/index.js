@@ -6,8 +6,9 @@ import { type Action } from '~/store/action';
 import { injectReducer } from '~/store/reducers';
 import SpotContainer from './containers/SpotContainer';
 import SpotUsersContainer from './containers/SpotUsersContainer';
+import SpotSchoolsContainer from './containers/SpotSchoolsContainer';
 import SpotGalleryContainer from './containers/SpotGalleryContainer';
-import { fetchSpot, loadGallery, loadSpotUsers, default as reducer } from './modules/spots';
+import { fetchSpot, loadGallery, loadSpotUsers, loadSpotSchools, default as reducer } from './modules/spots';
 
 export default (store: Store<State, Action>): RouteConfig => ({
   path: 'spots',
@@ -43,6 +44,13 @@ export default (store: Store<State, Action>): RouteConfig => ({
         store.dispatch(loadSpotUsers(+location.params.id));
       },
       component: SpotUsersContainer,
+    },
+    {
+      path: ':id/schools',
+      onEnter: function (location: Location) {
+        store.dispatch(loadSpotSchools(+location.params.id));
+      },
+      component: SpotSchoolsContainer,
     },
   ],
 });

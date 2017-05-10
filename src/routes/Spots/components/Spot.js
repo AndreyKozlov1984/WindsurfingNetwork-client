@@ -7,7 +7,11 @@ import _ from 'lodash';
 import { centerStyles } from '~/utils/formatters';
 import SpotConditions from './SpotConditions';
 import SpotMonthlyDistribution from './SpotMonthlyDistribution';
-import { type Spot as SpotType, type School as SchoolType, type SimpleUser as SimpleUserType } from '../modules/spots';
+import {
+  type Spot as SpotType,
+  type SimpleSchool as SimpleSchoolType,
+  type SimpleUser as SimpleUserType,
+} from '../modules/spots';
 
 export type DispatchProps = {} & $Exact<{}>;
 export type StateProps = {|
@@ -117,21 +121,26 @@ const Spot = ({ spot }: Props) => {
             spot={spot}
           />
           <br />
-          <Panel header='Schools'>
-            {spot.schools.map(function (school: SchoolType) {
-              return (
-                <Media key={school.id}>
-                  <Media.Left>
-                    <img width={64} height={64} src={`/api/usercontent/${school.logo}`} />
-                  </Media.Left>
-                  <Media.Body>
-                    <Media.Heading><Link to={`/schools/${school.id}`}>{school.name}</Link></Media.Heading>
-                    <p>Windsurfing, Kitesurfing</p>
-                  </Media.Body>
-                </Media>
-              );
-            })}
-          </Panel>
+          <div className='panel panel-default'>
+            <div className='panel-heading'>
+              <Link to={`/spots/${spot.id}/schools`}>Schools ({spot.schools.length})</Link>
+            </div>
+            <div className='panel-body'>
+              {spot.schools.map(function (school: SimpleSchoolType) {
+                return (
+                  <Media key={school.id}>
+                    <Media.Left>
+                      <img width={64} height={64} src={`/api/usercontent/${school.logo}`} />
+                    </Media.Left>
+                    <Media.Body>
+                      <Media.Heading><Link to={`/schools/${school.id}`}>{school.name}</Link></Media.Heading>
+                      <p>Windsurfing, Kitesurfing</p>
+                    </Media.Body>
+                  </Media>
+                );
+              })}
+            </div>
+          </div>
 
           <div className='panel panel-default'>
             <div className='panel-heading'>

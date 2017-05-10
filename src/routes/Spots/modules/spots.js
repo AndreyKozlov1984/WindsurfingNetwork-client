@@ -1,9 +1,10 @@
 // @flow
-import { getSpot, getSpotGallery, getSpotUsers } from './api';
+import { getSpot, getSpotGallery, getSpotUsers, getSpotSchools } from './api';
 import { type State as GlobalState } from '~/store/state';
 
 import cloneState from '~/store/cloneState';
 
+export type SpotConditions = { [string]: boolean };
 export type Spot = {|
   lat: number,
   lng: number,
@@ -17,6 +18,13 @@ export type Spot = {|
   photos: Array<string>,
   users: Array<SimpleUser>,
   schools: Array<SimpleSchool>,
+  surface_type: SpotConditions,
+  beach_type: SpotConditions,
+  wind_type: SpotConditions,
+  convenience_type: SpotConditions,
+  entrance_type: SpotConditions,
+  benthal_type: SpotConditions,
+  danger_type: SpotConditions,
 |};
 
 export type SimpleUser = {|
@@ -33,6 +41,12 @@ export type SpotForUsers = {|
   id: number,
   name: string,
   users: User[],
+|};
+
+export type SpotForSchools = {|
+  id: number,
+  name: string,
+  schools: School[],
 |};
 
 export type Photo = {|
@@ -62,6 +76,8 @@ export type School = {|
   id: number,
   logo: string,
   name: string,
+  description: string,
+  photos_count: number,
 |};
 
 type SetSelectedAction = {|
@@ -79,13 +95,23 @@ type SetSelectedUsersAction = {|
   data: SpotForUsers,
 |};
 
+type SetSelectedSchoolsAction = {|
+  type: 'spots/SET_SELECTED_SCHOOLS',
+  data: SpotForSchools,
+|};
+
 type SelectMonthAction = {|
   type: 'spots/SELECT_MONTH',
   month: ?number,
 |};
 
 // Actions
-export type Action = SetSelectedAction | SetSelectedGalleryAction | SetSelectedUsersAction | SelectMonthAction;
+export type Action =
+  | SetSelectedAction
+  | SetSelectedGalleryAction
+  | SetSelectedUsersAction
+  | SetSelectedSchoolsAction
+  | SelectMonthAction;
 type Dispatch = (action: Action | ThunkAction) => Promise<void>;
 type GetState = () => GlobalState;
 type ThunkAction = (dispatch: Dispatch, getState: GetState) => Promise<void>;
@@ -95,6 +121,7 @@ export type State = {|
   selectedGallery: ?SpotForGallery,
   selectedMonth: ?number,
   selectedUsers: ?SpotForUsers,
+  selectedSchools: ?SpotForSchools,
 |};
 
 export function loadGallery ({ spotId, selectedMonth }: { spotId: number, selectedMonth: ?number }): ThunkAction {
@@ -110,6 +137,13 @@ export function loadSpotUsers (spotId: number): ThunkAction {
   return async function (dispatch: Dispatch, getState: GetState): Promise<void> {
     const result = await getSpotUsers(spotId);
     dispatch(setSelectedUsers(result));
+  };
+}
+
+export function loadSpotSchools (spotId: number): ThunkAction {
+  return async function (dispatch: Dispatch, getState: GetState): Promise<void> {
+    const result = await getSpotSchools(spotId);
+    dispatch(setSelectedSchools(result));
   };
 }
 
@@ -141,6 +175,13 @@ export function setSelectedUsers (data: SpotForUsers): SetSelectedUsersAction {
   };
 }
 
+export function setSelectedSchools (data: SpotForSchools): SetSelectedSchoolsAction {
+  return {
+    type: 'spots/SET_SELECTED_SCHOOLS',
+    data: data,
+  };
+}
+
 export function selectMonth (month: ?number): SelectMonthAction {
   return {
     type: 'spots/SELECT_MONTH',
@@ -167,6 +208,9 @@ const setSelectedGalleryHandler = function (state: State, action: SetSelectedGal
 const setSelectedUsersHandler = function (state: State, action: SetSelectedUsersAction): State {
   return cloneState(state, { selectedUsers: action.data });
 };
+const setSelectedSchoolsHandler = function (state: State, action: SetSelectedSchoolsAction): State {
+  return cloneState(state, { selectedSchools: action.data });
+};
 const selectMonthHandler = function (state: State, action: SelectMonthAction): State {
   return cloneState(state, { selectedMonth: action.month });
 };
@@ -180,6 +224,7 @@ const initialState: State = {
   selectedGallery: null,
   selectedMonth: null,
   selectedUsers: null,
+  selectedSchools: null,
 };
 
 export default function spotsReducer (state: State = initialState, action: Action): State {
@@ -190,6 +235,8 @@ export default function spotsReducer (state: State = initialState, action: Actio
       return setSelectedGalleryHandler(state, action);
     case 'spots/SET_SELECTED_USERS':
       return setSelectedUsersHandler(state, action);
+    case 'spots/SET_SELECTED_SCHOOLS':
+      return setSelectedSchoolsHandler(state, action);
     case 'spots/SELECT_MONTH':
       return selectMonthHandler(state, action);
     default:
