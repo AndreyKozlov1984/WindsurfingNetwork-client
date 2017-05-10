@@ -41,10 +41,26 @@ const SpotSchools = ({ spot }: Props) => {
                     <div>{school.website ? <a href={`http://${school.website}`}>{school.website}</a> : null}</div>
                     <span>Photos: </span><span>{school.photos_count} </span>&nbsp;
                   </div>
-                  <div style={{ display: 'inline-block', width: 600, overflowY: 'hidden' }}>
+                  <div style={{ display: 'inline-block', width: 600, minHeight: 100, overflowY: 'hidden' }}>
                     <p>{school.description}</p>
                   </div>
                 </Media.Body>
+                <div style={{ display: 'block', maxHeight: 110, width: 900, overflow: 'hidden' }}>
+                  {school.photos.map((photo: string, index: number) => (
+                    <div
+                      key={index}
+                      className='photo'
+                      style={{
+                        backgroundImage: `url("/api/usercontent/${photo}") `,
+                        display: 'inline-block',
+                        borderRadius: 5,
+                        width: 100,
+                        height: 100,
+                        margin: 5,
+                      }}
+                    />
+                  ))}
+                </div>
               </Media>
             </ListGroupItem>
           ))}
