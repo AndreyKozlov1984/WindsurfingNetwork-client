@@ -77,6 +77,7 @@ export type School = {|
   logo: string,
   name: string,
   description: string,
+  website: ?string,
   photos_count: number,
 |};
 

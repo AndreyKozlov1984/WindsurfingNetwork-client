@@ -38,6 +38,7 @@ const SpotSchools = ({ spot }: Props) => {
                 <Media.Body>
                   <div style={{ display: 'inline-block', width: 200, 'vertical-align': 'top' }}>
                     <Media.Heading>{school.name}</Media.Heading>
+                    <div>{school.website ? <a href={`http://${school.website}`}>{school.website}</a> : null}</div>
                     <span>Photos: </span><span>{school.photos_count} </span>&nbsp;
                   </div>
                   <div style={{ display: 'inline-block', width: 600, overflowY: 'hidden' }}>
