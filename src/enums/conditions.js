@@ -147,7 +147,7 @@ export const entranceOptions: {|
 
 export type Danger = {|
   current: boolean,
-  animals: boolean,
+  sea_animals: boolean,
   jellyfish: boolean,
   trees: boolean,
   nets: boolean,
@@ -160,7 +160,7 @@ export type DangerName = { [DangerKey]: string };
 
 export const dangerLabels: DangerName = {
   current: 'Currents',
-  animals: 'Sea Animals',
+  sea_animals: 'Sea Animals',
   jellyfish: 'Jellyfishes',
   trees: 'Trees',
   nets: 'Nets',
@@ -170,7 +170,7 @@ export const dangerLabels: DangerName = {
 
 export const dangerInvertedLabels: DangerName = {
   current: 'No currents',
-  animals: 'No sea Animals',
+  sea_animals: 'No sea animals',
   jellyfish: 'No jellyfishes',
   trees: 'No trees',
   nets: 'No nets',
