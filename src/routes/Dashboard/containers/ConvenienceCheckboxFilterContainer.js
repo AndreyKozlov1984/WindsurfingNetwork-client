@@ -1,21 +1,9 @@
 // @flow
 import createContainer from './CheckboxFilterContainer';
+import { convenienceOptions } from '~/enums/conditions';
 export default createContainer({
   filterId: 'convenience',
   title: 'Convenience',
-  options: [
-    {
-      id: 'narrow',
-      name: 'narrow',
-    },
-    {
-      id: 'middle',
-      name: 'average',
-    },
-    {
-      id: 'wide',
-      name: 'wide',
-    },
-  ],
+  options: convenienceOptions,
 });
 

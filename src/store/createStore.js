@@ -2,6 +2,8 @@
 import { applyMiddleware, compose, createStore, type Store } from 'redux';
 import { type State } from '~/store/state';
 import { type Action } from '~/store/action';
+import { browserHistory } from 'react-router';
+import { routerMiddleware } from 'react-router-redux';
 import thunk from 'redux-thunk';
 import makeRootReducer from './reducers';
 import logger from 'redux-logger';
@@ -10,7 +12,7 @@ export default (initialState: any = {}): Store<State, Action> => {
   // ======================================================
   // Middleware Configuration
   // ======================================================
-  const middleware = [thunk, logger];
+  const middleware = [thunk, logger, routerMiddleware(browserHistory)];
 
   // ======================================================
   // Store Enhancers

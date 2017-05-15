@@ -2,19 +2,23 @@
 import React from 'react';
 import { Badge, Table } from 'react-bootstrap';
 import _ from 'lodash';
-import { propertyNameText, propertyValueText } from '~/utils/formatters';
 import { type Spot as SpotType } from '../modules/spots';
+import { mapConditions } from '~/enums/conditions';
 
-const ConditionElement = function ({ spot, property }: { spot: SpotType, property: string }) {
+const ConditionElement = function ({
+  spot,
+  property,
+  label,
+  labels,
+}: { spot: SpotType, property: string, label: string, labels: { [string]: string } }) {
   const values: { [string]: boolean } = spot[property + '_type'];
   const selectedValues = _.keys(_.pickBy(values));
   const combinedSelectedValues = selectedValues.map((value: string, index: number) => (
-    <Badge key={index}>{propertyValueText(value)}</Badge>
+    <Badge key={index}>{labels[value]}</Badge>
   ));
-  const propertyName = propertyNameText(property);
   return (
     <tr>
-      <td>{propertyName}</td>
+      <td>{label}</td>
       <td>{combinedSelectedValues}</td>
     </tr>
   );
@@ -23,8 +27,8 @@ const ConditionElement = function ({ spot, property }: { spot: SpotType, propert
 const SpotConditions = ({ spot }: { spot: SpotType }) => (
   <Table condensed hover>
     <tbody>
-      {['surface', 'beach', 'wind', 'convenience', 'entrance', 'benthal', 'danger'].map(function (property: string) {
-        return <ConditionElement spot={spot} key={property} property={property} />;
+      {mapConditions(function ({ name, label, labels }: { name: string, label: string, labels: { [string]: string } }) {
+        return <ConditionElement spot={spot} key={name} property={name} label={label} labels={labels} />;
       })}
     </tbody>
   </Table>

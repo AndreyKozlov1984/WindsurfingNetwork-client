@@ -8,7 +8,9 @@ import SpotContainer from './containers/SpotContainer';
 import SpotUsersContainer from './containers/SpotUsersContainer';
 import SpotSchoolsContainer from './containers/SpotSchoolsContainer';
 import SpotGalleryContainer from './containers/SpotGalleryContainer';
+import SpotEditContainer from './containers/SpotEditContainer';
 import { fetchSpot, loadGallery, loadSpotUsers, loadSpotSchools, default as reducer } from './modules/spots';
+import { loadForm, default as spotEditReducer } from './modules/spotEdit';
 
 export default (store: Store<State, Action>): RouteConfig => ({
   path: 'spots',
@@ -22,6 +24,14 @@ export default (store: Store<State, Action>): RouteConfig => ({
         store.dispatch(fetchSpot(+location.params.id));
       },
       component: SpotContainer,
+    },
+    {
+      path: ':id/edit',
+      onEnter: function (location: Location) {
+        injectReducer(store, { key: 'spotEdit', reducer: spotEditReducer });
+        store.dispatch(loadForm(+location.params.id));
+      },
+      component: SpotEditContainer,
     },
     {
       path: ':id/gallery',

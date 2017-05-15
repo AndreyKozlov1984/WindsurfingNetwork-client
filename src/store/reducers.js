@@ -1,12 +1,14 @@
 // @flow
 import { combineReducers, type Store, type AsyncReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
+import { reducer as formReducer } from 'redux-form';
 import { type State } from '~/store/state';
 import { type Action } from '~/store/action';
 
 export const makeRootReducer = (asyncReducers: AsyncReducers = {}): Function => {
   return combineReducers({
     routing: routerReducer,
+    form: formReducer,
     ...asyncReducers,
   });
 };

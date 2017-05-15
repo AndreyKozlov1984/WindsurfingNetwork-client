@@ -1,29 +1,9 @@
 // @flow
 import createContainer from './CheckboxFilterContainer';
+import { benthalOptions } from '~/enums/conditions';
 export default createContainer({
   filterId: 'benthal',
   title: 'Benthal',
-  options: [
-    {
-      id: 'sand',
-      name: 'sand',
-    },
-    {
-      id: 'small_stones',
-      name: 'small stones',
-    },
-    {
-      id: 'large_stones',
-      name: 'large stones',
-    },
-    {
-      id: 'pebble',
-      name: 'pebble',
-    },
-    {
-      id: 'coral',
-      name: 'coral',
-    },
-  ],
+  options: benthalOptions,
 });
 

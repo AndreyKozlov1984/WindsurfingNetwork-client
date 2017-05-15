@@ -4,7 +4,7 @@ import { mapValues } from 'lodash';
 import { Checkbox, Panel } from 'react-bootstrap';
 
 export type Option = {|
-  id: string,
+  id: $Subtype<string>,
   name: string,
 |};
 export type DispatchProps = {|

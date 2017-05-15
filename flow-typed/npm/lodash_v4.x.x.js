@@ -61,7 +61,7 @@ declare module 'lodash' {
     | propertyIterateeShorthand;
 
   declare type OMapIterator<T,O,U> =
-    | ((item: T, key: string, object: O) => U)
+    | ((item: T, key: $Subtype<string>, object: O) => U)
     | propertyIterateeShorthand;
 
   declare class Lodash {
@@ -389,7 +389,7 @@ declare module 'lodash' {
     invert(object?: ?Object, multiVal?: bool): Object;
     invertBy(object: ?Object, iteratee?: Function): Object;
     invoke(object?: ?Object, path?: ?Array<string>|string, ...args?: Array<any>): any;
-    keys(object?: ?Object): Array<string>;
+    keys(object?: ?Object): Array<$Subtype<string>>;
     keysIn(object?: ?Object): Array<string>;
     mapKeys(object?: ?Object, iteratee?: OIteratee<*>): Object;
     mapValues(object?: ?Object, iteratee?: OIteratee<*>): Object;

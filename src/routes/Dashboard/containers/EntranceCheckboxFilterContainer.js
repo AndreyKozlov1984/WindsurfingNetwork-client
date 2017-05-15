@@ -1,21 +1,9 @@
 // @flow
 import createContainer from './CheckboxFilterContainer';
+import { entranceOptions } from '~/enums/conditions';
 export default createContainer({
   filterId: 'entrance',
   title: 'Entrance',
-  options: [
-    {
-      id: 'shallow',
-      name: 'shallow',
-    },
-    {
-      id: 'average',
-      name: 'average',
-    },
-    {
-      id: 'deep',
-      name: 'deep',
-    },
-  ],
+  options: entranceOptions,
 });
 

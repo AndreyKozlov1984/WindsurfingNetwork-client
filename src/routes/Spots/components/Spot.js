@@ -1,7 +1,8 @@
 // @flow
-import { Grid, Carousel, Col, Panel, Media, Tabs, Tab } from 'react-bootstrap';
+import { Grid, Carousel, Col, Panel, Media, Tabs, Tab, Button } from 'react-bootstrap';
 import React from 'react';
 import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
+import { LinkContainer } from 'react-router-bootstrap';
 import { Link } from 'react-router';
 import _ from 'lodash';
 import { centerStyles } from '~/utils/formatters';
@@ -67,6 +68,9 @@ const Spot = ({ spot }: Props) => {
 
                 </div>
               </Media.Body>
+              <Media.Right>
+                <LinkContainer to={`/spots/${spot.id}/edit`}><Button>Edit</Button></LinkContainer>
+              </Media.Right>
             </Media>
             <Col md={4}>
               <h4> Conditions </h4>
