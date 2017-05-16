@@ -20,7 +20,7 @@ const SpotEdit = ({ form, onSubmit, onCancel }: Props): React$Element<any> => {
     <div style={{ overflowY: 'auto', height: 'calc(100% - 70px)' }}>
       <Grid>
         <h1> Editing an existing spot </h1>
-        <SpotEditForm onSubmit={onSubmit} onCancel={onCancel} initialValues={form.values} />
+        <SpotEditForm onSubmit={onSubmit} onCancel={onCancel} initialValues={form.values} lookups={form.lookups} />
       </Grid>
     </div>
   );

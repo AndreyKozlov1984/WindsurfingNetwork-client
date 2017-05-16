@@ -1,19 +1,26 @@
 // @flow
 import _ from 'lodash';
 import React from 'react';
-import { Field, Fields, FormSection, reduxForm } from 'redux-form';
+import { Field, FieldArray, Fields, FormSection, reduxForm } from 'redux-form';
 import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
 import { mapConditions } from '~/enums/conditions';
+import { type Lookups } from '../modules/spotEdit';
+import { type SimpleSchool } from '../modules/spots';
 import {
+  Glyphicon,
   Checkbox,
   Button,
   Col,
   Row,
+  Media,
   Form,
   FormGroup,
   ControlLabel,
   FormControl,
+  ListGroup,
+  ListGroupItem,
   HelpBlock,
+  Panel,
   Tab,
   Tabs,
 } from 'react-bootstrap';
@@ -97,6 +104,92 @@ const renderCheckbox = ({ input, label, meta }: { input: any, label: string, met
   );
 };
 
+const getSelectedSchools = (selectedSchools: number[], allSchools: SimpleSchool[]): SimpleSchool[] => {
+  return _.map(selectedSchools, function (id: number) {
+    const school = _.find(allSchools, { id: id });
+    if (!school) {
+      throw new Error('School not present in the list');
+    }
+    return school;
+  });
+};
+
+type Option = {| id: number, name: string, disabled: boolean |};
+const getSchoolsAsOptions = (selectedSchools: number[], allSchools: SimpleSchool[]) => {
+  return _.map(allSchools, (school: SimpleSchool) => ({
+    id: school.id,
+    name: school.name,
+    disabled: _.includes(selectedSchools, school.id),
+  }));
+};
+
+/* eslint-disable immutable/no-this */
+class AddSchool extends React.Component {
+  props: {
+    options: Option[],
+    fields: any,
+  };
+  state: {
+    selectedSchool: string,
+  };
+  onClick = function () {
+    this.props.fields.push(+this.state.selectedSchool);
+    this.setState({ selectedSchool: '' });
+  };
+  onChange = function (e: any) {
+    this.setState({ selectedSchool: e.target.value });
+  };
+  constructor () {
+    super();
+    this.state = { selectedSchool: '' }; // eslint-disable-line immutable/no-mutation
+  }
+  render () {
+    return (
+      <Row>
+        <Col sm={8}>
+          <FormControl componentClass='select' value={this.state.selectedSchool} onChange={this.onChange.bind(this)}>
+            <option value=''>(select)</option>
+            {this.props.options.map((option: Option, index: number) => (
+              <option key={index} value={option.id} disabled={option.disabled}>{option.name}</option>
+            ))}
+          </FormControl>
+        </Col>
+        <Col sm={4}>
+          <Button disabled={!this.state.selectedSchool} onClick={this.onClick.bind(this)}>Add</Button>
+        </Col>
+      </Row>
+    );
+  }
+}
+/* eslint-enable immutable/no-this */
+
+const renderSchools = ({ fields, schoolsList }: { fields: any, schoolsList: SimpleSchool[] }): React$Element<any> => {
+  const list = getSelectedSchools(fields.getAll(), schoolsList);
+  const options = getSchoolsAsOptions(fields.getAll(), schoolsList);
+  return (
+    <div>
+      <ListGroup>
+        {list.map((school: SimpleSchool, index: number) => (
+          <ListGroupItem key={index}>
+            <Media>
+              <Media.Left>
+                <img width={64} height={64} src={`/api/usercontent/${school.logo}`} />
+              </Media.Left>
+              <Media.Body>
+                {school.name}
+              </Media.Body>
+              <Media.Right>
+                <Button onClick={() => fields.remove(index)}><Glyphicon glyph='trash' /></Button>
+              </Media.Right>
+            </Media>
+          </ListGroupItem>
+        ))}
+      </ListGroup>
+      <AddSchool fields={fields} options={options} />
+    </div>
+  );
+};
+
 const activities: { [string]: string } = {
   sailing: 'Sailing',
   surfing: 'Surfing',
@@ -105,16 +198,17 @@ const activities: { [string]: string } = {
   windsurfing: 'Wind Surfing',
 };
 
-type Props = {
+type Props = {|
+  lookups: Lookups,
   handleSubmit: Function,
   onCancel: Function,
   reset: Function,
   submitting: boolean,
   error: ?string,
-};
+|};
 
 const SimpleForm = (props: Props) => {
-  const { handleSubmit, onCancel, error, submitting } = props;
+  const { handleSubmit, onCancel, error, submitting, lookups } = props;
   return (
     <Form onSubmit={handleSubmit}>
       <Field label='Spot' name='name' validate={[notBlank]} component={renderField} type='text' />
@@ -155,6 +249,10 @@ const SimpleForm = (props: Props) => {
           </FormSection>
         ),
       )}
+
+      <Panel header='schools'>
+        <FieldArray name='schools' schoolsList={lookups.schools} component={renderSchools} />
+      </Panel>
 
       {error && <p style={{ color: 'red', fontSize: 20, textAlign: 'center' }}>{error}</p>}
       <FormGroup>

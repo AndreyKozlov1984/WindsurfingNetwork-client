@@ -5,8 +5,11 @@ import { push, goBack } from 'react-router-redux';
 import { SubmissionError } from 'redux-form';
 
 import cloneState from '~/store/cloneState';
-import { type SpotConditions } from './spots';
+import { type SimpleSchool, type SpotConditions } from './spots';
 
+export type Lookups = {|
+  schools: SimpleSchool[],
+|};
 export type SpotForm = {|
   values: {|
     id: number,
@@ -17,7 +20,7 @@ export type SpotForm = {|
     country: string,
     region: string,
     rating: number,
-    monthly_distribution: { [string]: any[] },
+    monthly_distribution: { [string]: number[] },
     photos: Array<string>,
     users: Array<number>,
     schools: Array<number>,
@@ -29,6 +32,7 @@ export type SpotForm = {|
     benthal_type: SpotConditions,
     danger_type: SpotConditions,
   |},
+  lookups: Lookups,
 |};
 
 export type SaveSpotResult = {|
