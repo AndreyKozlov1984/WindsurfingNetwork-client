@@ -11,11 +11,11 @@ export class AddSchool extends React.Component {
   state: {|
     selectedSchool: string,
   |};
-  onClick = function () {
+  onClick = () => {
     this.props.onAdd(+this.state.selectedSchool);
     this.setState({ selectedSchool: '' });
   };
-  onChange = function (e: any) {
+  onChange = (e: any) => {
     this.setState({ selectedSchool: e.target.value });
   };
   constructor () {
@@ -26,7 +26,7 @@ export class AddSchool extends React.Component {
     return (
       <Row>
         <Col sm={8}>
-          <FormControl componentClass='select' value={this.state.selectedSchool} onChange={this.onChange.bind(this)}>
+          <FormControl componentClass='select' value={this.state.selectedSchool} onChange={this.onChange}>
             <option value=''>(Select a school to add to the spot)</option>
             {this.props.options.map((option: Option, index: number) => (
               <option key={index} value={option.id} disabled={option.disabled}>{option.name}</option>
@@ -34,7 +34,7 @@ export class AddSchool extends React.Component {
           </FormControl>
         </Col>
         <Col sm={4}>
-          <Button disabled={!this.state.selectedSchool} onClick={this.onClick.bind(this)}>Add</Button>
+          <Button disabled={!this.state.selectedSchool} onClick={this.onClick}>Add</Button>
         </Col>
       </Row>
     );

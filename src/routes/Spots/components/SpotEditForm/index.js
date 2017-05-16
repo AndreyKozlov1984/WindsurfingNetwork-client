@@ -138,7 +138,7 @@ const SimpleForm = (props: Props) => {
       <FormGroup>
         <Button type='submit' bsStyle='primary' bsSize='large' disabled={submitting}>Save</Button>
         &nbsp;
-        <Button pullRight type='button' bsSize='large' disabled={submitting} onClick={onCancel}>
+        <Button type='button' bsSize='large' disabled={submitting} onClick={onCancel}>
           Cancel
         </Button>
       </FormGroup>
