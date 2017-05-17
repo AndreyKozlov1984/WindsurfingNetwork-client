@@ -3,6 +3,7 @@ import { getSpotForm, saveSpot } from './api';
 import { type State as GlobalState } from '~/store/state';
 import { push, goBack } from 'react-router-redux';
 import { SubmissionError } from 'redux-form';
+import validate from '~/utils/validator';
 
 import cloneState from '~/store/cloneState';
 import { type SimpleSchool, type SpotConditions } from './spots';
@@ -10,28 +11,29 @@ import { type SimpleSchool, type SpotConditions } from './spots';
 export type Lookups = {|
   schools: SimpleSchool[],
 |};
+export type Values = {|
+  id: number,
+  lat: number,
+  lng: number,
+  logo: string,
+  name: string,
+  country: string,
+  region: string,
+  rating: number,
+  monthly_distribution: { [string]: number[] },
+  photos: Array<string>,
+  users: Array<number>,
+  schools: Array<number>,
+  surface_type: SpotConditions,
+  beach_type: SpotConditions,
+  wind_type: SpotConditions,
+  convenience_type: SpotConditions,
+  entrance_type: SpotConditions,
+  benthal_type: SpotConditions,
+  danger_type: SpotConditions,
+|};
 export type SpotForm = {|
-  values: {|
-    id: number,
-    lat: number,
-    lng: number,
-    logo: string,
-    name: string,
-    country: string,
-    region: string,
-    rating: number,
-    monthly_distribution: { [string]: number[] },
-    photos: Array<string>,
-    users: Array<number>,
-    schools: Array<number>,
-    surface_type: SpotConditions,
-    beach_type: SpotConditions,
-    wind_type: SpotConditions,
-    convenience_type: SpotConditions,
-    entrance_type: SpotConditions,
-    benthal_type: SpotConditions,
-    danger_type: SpotConditions,
-  |},
+  values: Values,
   lookups: Lookups,
 |};
 
@@ -63,8 +65,8 @@ export function loadForm (spotId: number): ThunkAction {
 }
 
 export function submit (values: any): ThunkAction {
-  console.info(values);
   return async function (dispatch: Dispatch, getState: GetState): Promise<void> {
+    (validate(__filename, __line, values): Values);
     const result = await saveSpot(values);
     if (result.status === 'error') {
       throw new SubmissionError(result.errors);

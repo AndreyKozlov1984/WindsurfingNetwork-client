@@ -10,7 +10,9 @@ export class AddSchool extends React.Component {
   |};
   state: {|
     selectedSchool: string,
-  |};
+  |} = {
+    selectedSchool: '',
+  };
   onClick = () => {
     this.props.onAdd(+this.state.selectedSchool);
     this.setState({ selectedSchool: '' });
@@ -18,10 +20,6 @@ export class AddSchool extends React.Component {
   onChange = (e: any) => {
     this.setState({ selectedSchool: e.target.value });
   };
-  constructor () {
-    super();
-    this.state = { selectedSchool: '' }; // eslint-disable-line immutable/no-mutation
-  }
   render () {
     return (
       <Row>

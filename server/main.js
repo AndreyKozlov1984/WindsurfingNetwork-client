@@ -5,6 +5,7 @@ const webpack = require('webpack');
 const webpackConfig = require('../config/webpack.config');
 const project = require('../config/project.config');
 const compress = require('compression');
+const uploadProxy = require('http-proxy-middleware');
 const proxy = require('express-http-proxy');
 const bodyParser = require('body-parser')
 const validate = require('./validator');
@@ -16,6 +17,7 @@ app.use(compress());
 app.use(bodyParser.json({limit: '50mb'}))
 
 // proxy everything
+app.use('/api/upload', uploadProxy({target: 'http://localhost:3001', logLevel: 'debug', changeOrigin: true}));
 app.use('/api', proxy('localhost:3001', {
     forwardPath: function(req, res) {
         return '/api' + require('url').parse(req.url).path;

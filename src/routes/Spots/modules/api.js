@@ -59,7 +59,7 @@ export async function getSpotForm (id: number): Promise<SpotForm> {
     },
   });
   const result = await response.json();
-  // (validate(__filename, __line, result): SpotForm);
+  (validate(__filename, __line, result): SpotForm);
   return result;
 }
 

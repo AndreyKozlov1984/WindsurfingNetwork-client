@@ -5,6 +5,7 @@ import { Field, FieldArray, Fields, FormSection, reduxForm } from 'redux-form';
 import { mapConditions } from '~/enums/conditions';
 import { type Lookups } from '../../modules/spotEdit';
 import { SchoolsField } from './SchoolsField';
+import { LogoField } from './LogoField';
 import {
   Checkbox,
   Button,
@@ -91,6 +92,7 @@ const SimpleForm = (props: Props) => {
   const { handleSubmit, onCancel, error, submitting, lookups } = props;
   return (
     <Form onSubmit={handleSubmit}>
+      <Field label='Logo' name='logo' component={LogoField} />
       <Field label='Spot' name='name' validate={[notBlank]} component={renderField} type='text' />
       <Field label='Country' name='country' component={renderField} type='text' />
       <Field label='Region' name='region' component={renderField} type='text' />

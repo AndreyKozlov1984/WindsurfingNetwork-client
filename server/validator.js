@@ -4,7 +4,36 @@ const execFile = require('child-process-promise').exec;
 const flow = require('flow-bin');
 const path = require('path');
 
+var locked = false;
+var handlers = [];
+onUnlocked = function (handler) {
+  handlers.push(handler);
+};
+async function isUnlocked () {
+  return new Promise(function (resolve, reject) {
+    if (!locked) {
+      resolve();
+    } else {
+      onUnlocked(function () {
+        resolve();
+      });
+    }
+  });
+}
+function lock () {
+  locked = true;
+}
+function unlock () {
+  locked = false;
+  const handler = handlers.shift();
+  if (handler) {
+    handler();
+  }
+}
+
 async function validate (file, line, jsonValue) {
+  await isUnlocked();
+  lock();
   const content = await fs.readFile(file, 'utf-8');
   const contentLines = content.toString().split('\n');
   const lineContent = contentLines[line - 1];
@@ -24,9 +53,11 @@ async function validate (file, line, jsonValue) {
     await execFile(flow);
     result = true;
   } catch (e) {
+    console.info(newContent);
     result = e.stdout;
   }
   await fs.unlink(generatedFileName);
+  unlock();
   return result;
 }
 
