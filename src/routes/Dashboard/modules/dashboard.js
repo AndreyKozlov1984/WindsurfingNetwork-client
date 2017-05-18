@@ -129,6 +129,8 @@ export function initOrResume (): ThunkAction {
   return async function (dispatch: Dispatch, getState: GetState): Promise<void> {
     if (!getState().dashboard.data) {
       dispatch(init());
+    } else {
+      dispatch(reload());
     }
   };
 }
