@@ -28,6 +28,7 @@ export const PhotosField = ({ fields, onRotateLeft, onRotateRight }: Props): Rea
               margin: '10px 10px',
               display: 'inline-block',
               position: 'relative',
+              overflow: 'hidden',
             }}
           >
             <Field

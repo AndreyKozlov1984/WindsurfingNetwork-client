@@ -2,14 +2,14 @@
 import React from 'react';
 import SpotEditForm from './SpotEditForm';
 import { Grid } from 'react-bootstrap';
-import { type SpotForm } from '../modules/spotEdit';
+import { type SpotForm, type Values } from '../modules/spotEdit';
 
 export type StateProps = {|
   form: ?SpotForm,
 |};
 export type DispatchProps = {|
-  onSubmit: Function,
-  onCancel: Function,
+  onSubmit: (values: Values) => any,
+  onCancel: () => any,
   onRotateLeft: Function,
   onRotateRight: Function,
 |};

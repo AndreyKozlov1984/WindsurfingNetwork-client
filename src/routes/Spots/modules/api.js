@@ -2,7 +2,7 @@
 import fetch from 'isomorphic-fetch';
 import validate from '~/utils/validator';
 import { type Spot, type SpotForGallery, type SpotForUsers, type SpotForSchools } from './spots';
-import { type SpotForm, type SaveSpotResult } from './spotEdit';
+import { type SpotForm, type SaveSpotResult, type Values } from './spotEdit';
 export async function getSpot (id: number): Promise<Spot> {
   const response = await fetch(`/api/spots/${id}`, {
     method: 'GET',
@@ -63,7 +63,7 @@ export async function getSpotForm (id: number): Promise<SpotForm> {
   return result;
 }
 
-export async function saveSpot (values: any): Promise<SaveSpotResult> {
+export async function saveSpot (values: Values): Promise<SaveSpotResult> {
   try {
     const response = await fetch(`/api/spots/${values.id}`, {
       method: 'POST',

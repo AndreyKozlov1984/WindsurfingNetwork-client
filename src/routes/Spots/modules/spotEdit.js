@@ -71,7 +71,7 @@ export function loadForm (spotId: number): ThunkAction {
   };
 }
 
-export function submit (values: any): ThunkAction {
+export function submit (values: Values): ThunkAction {
   return async function (dispatch: Dispatch, getState: GetState): Promise<void> {
     (validate(__filename, __line, values): Values);
     const result = await saveSpot(values);
