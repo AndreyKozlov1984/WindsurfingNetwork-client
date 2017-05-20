@@ -113,6 +113,7 @@
     "react-addons-css-transition-group": "^15.5.2",
     "react-addons-perf": "^15.4.2",
     "react-bootstrap": "^0.30.8",
+    "react-dnd": "^2.4.0",
     "react-dom": "^15.4.0",
     "react-fine-uploader": "^1.0.0",
     "react-google-maps": "beta",

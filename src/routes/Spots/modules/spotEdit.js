@@ -1,8 +1,8 @@
 // @flow
-import { getSpotForm, saveSpot } from './api';
+import { getSpotForm, saveSpot, rotate } from './api';
 import { type State as GlobalState } from '~/store/state';
 import { push, goBack } from 'react-router-redux';
-import { SubmissionError } from 'redux-form';
+import { SubmissionError, change } from 'redux-form';
 import validate from '~/utils/validator';
 
 import cloneState from '~/store/cloneState';
@@ -10,6 +10,13 @@ import { type SimpleSchool, type SpotConditions } from './spots';
 
 export type Lookups = {|
   schools: SimpleSchool[],
+|};
+export type Photo = {|
+  filename: string,
+  month: number,
+  width: number,
+  height: number,
+  created_at: string,
 |};
 export type Values = {|
   id: number,
@@ -21,7 +28,7 @@ export type Values = {|
   region: string,
   rating: number,
   monthly_distribution: { [string]: number[] },
-  photos: Array<string>,
+  photos: Array<Photo>,
   users: Array<number>,
   schools: Array<number>,
   surface_type: SpotConditions,
@@ -73,6 +80,24 @@ export function submit (values: any): ThunkAction {
     } else {
       dispatch(push(`/spots/${values.id}`));
     }
+  };
+}
+
+export function rotateLeft ({ path, filename }: {| path: string, filename: string |}): ThunkAction {
+  return async function (dispatch: Dispatch, getState: GetState): Promise<void> {
+    const result = await rotate({ direction: 'left', path, filename });
+    dispatch(change('spot', `${path}.width`, result.width, false, false));
+    dispatch(change('spot', `${path}.height`, result.height, false, false));
+    dispatch(change('spot', `${path}.filename`, result.filename, false, false));
+  };
+}
+
+export function rotateRight ({ path, filename }: {| path: string, filename: string |}): ThunkAction {
+  return async function (dispatch: Dispatch, getState: GetState): Promise<void> {
+    const result = await rotate({ direction: 'right', filename });
+    dispatch(change('spot', `${path}.width`, result.width, false, false));
+    dispatch(change('spot', `${path}.height`, result.height, false, false));
+    dispatch(change('spot', `${path}.filename`, result.filename, false, false));
   };
 }
 

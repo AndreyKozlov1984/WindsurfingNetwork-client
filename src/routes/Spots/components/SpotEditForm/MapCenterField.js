@@ -12,6 +12,7 @@ const Map = withGoogleMap(({ lat, lng, onMove }: MapProps): React$Element<any> =
     <GoogleMap
       zoom={6}
       center={{ lat: lat, lng: lng }}
+      options={{ scrollwheel: false }}
       onClick={(e: any) => onMove({ lat: e.latLng.lat(), lng: e.latLng.lng() })}
     >
       <Marker position={{ lat: lat, lng: lng }} key='point' />

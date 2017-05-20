@@ -33,7 +33,7 @@ const getMonthInfo = (spot: SpotForGalleryType, selectedMonth: ?number): MonthIn
     _.range(12).map(function (monthNumber: number) {
       return {
         id: monthNumber,
-        text: `${monthByNumber(monthNumber)} (${(spot.photos[monthNumber] || []).length})`,
+        text: `${monthByNumber(monthNumber)} (${(spot.photos[monthNumber.toString()] || []).length})`,
         href: `/spots/${spot.id}/gallery/${monthNumber}`,
       };
     }),
@@ -46,13 +46,13 @@ const SpotGallery = ({ spot, selectedMonth }: Props) => {
   const galleryPhoto = (photo: PhotoType) => ({
     width: photo.width,
     height: photo.height,
-    src: `/api/usercontent/${photo.photo}`,
+    src: `/api/usercontent/${photo.filename}`,
   });
   const months: MonthInfo[] = getMonthInfo(spot, selectedMonth);
 
   const visiblePhotos: PhotosByMonthType = typeof selectedMonth !== 'number'
     ? spot.photos
-    : { [selectedMonth]: spot.photos[selectedMonth] || [] };
+    : { [selectedMonth]: spot.photos[selectedMonth.toString()] || [] };
 
   return (
     <div className='layout-main' style={{ marginTop: 30 }}>
@@ -70,10 +70,10 @@ const SpotGallery = ({ spot, selectedMonth }: Props) => {
           </LinkContainer>
           {typeof selectedMonth === 'number'
             ? <LinkContainer to={`/spots/${spot.id}/gallery/${selectedMonth}`}>
-              <Breadcrumb.Item>
-                {monthByNumber(selectedMonth)}
-              </Breadcrumb.Item>
-            </LinkContainer>
+                <Breadcrumb.Item>
+                  {monthByNumber(selectedMonth)}
+                </Breadcrumb.Item>
+              </LinkContainer>
             : ''}
         </Breadcrumb>
       </div>

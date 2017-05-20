@@ -21,7 +21,7 @@ export type StateProps = {|
 export type Props = {| ...StateProps, ...DispatchProps |};
 
 const Map = withGoogleMap(({ spot }: { spot: SpotType }): React$Element<any> => (
-  <GoogleMap zoom={12} center={{ lat: spot.lat, lng: spot.lng }}>
+  <GoogleMap options={{ scrollwheel: false }} zoom={12} center={{ lat: spot.lat, lng: spot.lng }}>
     <Marker position={{ lat: spot.lat, lng: spot.lng }} key='point' />
   </GoogleMap>
 ));

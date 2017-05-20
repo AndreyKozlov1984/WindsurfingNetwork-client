@@ -83,3 +83,14 @@ export async function saveSpot (values: any): Promise<SaveSpotResult> {
   }
 }
 
+export async function rotate ({ direction, filename }: { direction: 'left' | 'right', filename: string }) {
+  const response = await fetch(`/api/spots/rotate/${direction}/${filename}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  const result = await response.json();
+  return result;
+}
+

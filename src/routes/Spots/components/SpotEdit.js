@@ -10,9 +10,11 @@ export type StateProps = {|
 export type DispatchProps = {|
   onSubmit: Function,
   onCancel: Function,
+  onRotateLeft: Function,
+  onRotateRight: Function,
 |};
 export type Props = {| ...StateProps, ...DispatchProps |};
-const SpotEdit = ({ form, onSubmit, onCancel }: Props): React$Element<any> => {
+const SpotEdit = ({ form, onRotateLeft, onRotateRight, onSubmit, onCancel }: Props): React$Element<any> => {
   if (!form) {
     return <div>Loading...</div>;
   }
@@ -20,7 +22,14 @@ const SpotEdit = ({ form, onSubmit, onCancel }: Props): React$Element<any> => {
     <div style={{ overflowY: 'auto', height: 'calc(100% - 70px)' }}>
       <Grid>
         <h1> Editing an existing spot </h1>
-        <SpotEditForm onSubmit={onSubmit} onCancel={onCancel} initialValues={form.values} lookups={form.lookups} />
+        <SpotEditForm
+          onRotateLeft={onRotateLeft}
+          onRotateRight={onRotateRight}
+          onSubmit={onSubmit}
+          onCancel={onCancel}
+          initialValues={form.values}
+          lookups={form.lookups}
+        />
       </Grid>
     </div>
   );

@@ -5,6 +5,7 @@ import { Field, FieldArray, Fields, FormSection, reduxForm } from 'redux-form';
 import { mapConditions } from '~/enums/conditions';
 import { type Lookups } from '../../modules/spotEdit';
 import { SchoolsField } from './SchoolsField';
+import { PhotosField } from './PhotosField';
 import { LogoField } from './LogoField';
 import {
   Checkbox,
@@ -81,6 +82,8 @@ const activities: { [string]: string } = {
 
 type Props = {|
   lookups: Lookups,
+  onRotateLeft: ({ path: string, filename: string }) => void,
+  onRotateRight: ({ path: string, filename: string }) => void,
   handleSubmit: Function,
   onCancel: Function,
   reset: Function,
@@ -89,7 +92,7 @@ type Props = {|
 |};
 
 const SimpleForm = (props: Props) => {
-  const { handleSubmit, onCancel, error, submitting, lookups } = props;
+  const { handleSubmit, onCancel, error, submitting, lookups, onRotateLeft, onRotateRight } = props;
   return (
     <Form onSubmit={handleSubmit}>
       <Field label='Logo' name='logo' component={LogoField} />
@@ -134,6 +137,10 @@ const SimpleForm = (props: Props) => {
 
       <Panel header='schools'>
         <FieldArray name='schools' schoolsList={lookups.schools} component={SchoolsField} />
+      </Panel>
+
+      <Panel header='photos'>
+        <FieldArray onRotateLeft={onRotateLeft} onRotateRight={onRotateRight} name='photos' component={PhotosField} />
       </Panel>
 
       {error && <p style={{ color: 'red', fontSize: 20, textAlign: 'center' }}>{error}</p>}

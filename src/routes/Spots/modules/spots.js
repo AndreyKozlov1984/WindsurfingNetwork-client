@@ -52,9 +52,10 @@ export type SpotForSchools = {|
 export type Photo = {|
   width: number,
   height: number,
-  photo: string,
+  filename: string,
+  month: number,
 |};
-export type PhotosByMonth = { [number]: Photo[] };
+export type PhotosByMonth = { [string]: Photo[] };
 
 export type SpotForGallery = {|
   id: number,
