@@ -2,6 +2,7 @@
 import React from 'react';
 import { LinkContainer, IndexLinkContainer } from 'react-router-bootstrap';
 import { Nav, Navbar, NavItem } from 'react-bootstrap';
+import UserStatusContainer from '../../containers/UserStatusContainer';
 
 export const Header = () => (
   <Navbar staticTop className='header'>
@@ -17,6 +18,9 @@ export const Header = () => (
           <NavItem>Spots</NavItem>
         </LinkContainer>
       </Nav>
+    </Nav>
+    <Nav pullRight>
+      <UserStatusContainer />
     </Nav>
   </Navbar>
 );

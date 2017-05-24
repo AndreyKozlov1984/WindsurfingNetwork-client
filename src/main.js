@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import createStore from './store/createStore';
 import AppContainer from './containers/AppContainer';
+import { configure } from 'redux-auth';
 
 // Perf! making it available in the dev tools
 import Perf from 'react-addons-perf';
@@ -18,8 +19,20 @@ const store = createStore(initialState);
 // ========================================================
 const MOUNT_NODE = document.getElementById('root');
 
-const render = () => {
+const render = async () => {
   const routes = require('./routes/index').default(store);
+  await store.dispatch(
+    configure(
+      {
+        apiUrl: `/api`,
+      },
+      {
+        cleanSession: false,
+        clientOnly: true,
+        storage: 'localStorage',
+      },
+    ),
+  );
   ReactDOM.render(<AppContainer store={store} routes={routes} />, MOUNT_NODE);
 };
 

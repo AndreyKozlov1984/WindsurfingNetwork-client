@@ -6,6 +6,7 @@ import { type Action } from '~/store/action';
 import DashboardRoute from './Dashboard';
 import PostsRoute from './Posts';
 import SpotsRoute from './Spots';
+import LoginRoute from './Login';
 import { type RouteConfig } from '~/routes/types';
 
 /*  Note: Instead of using JSX, we recommend using react-router
@@ -15,7 +16,7 @@ export const createRoutes = (store: Store<State, Action>): RouteConfig => ({
   path: '/',
   component: CoreLayout,
   indexRoute: DashboardRoute(store),
-  childRoutes: [PostsRoute(store), SpotsRoute(store)],
+  childRoutes: [PostsRoute(store), SpotsRoute(store), LoginRoute(store)],
 });
 
 export default createRoutes;

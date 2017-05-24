@@ -1,5 +1,5 @@
 // @flow
-import fetch from 'isomorphic-fetch';
+import { fetch } from 'redux-auth';
 import validate from '~/utils/validator';
 import { type Spot, type SpotForGallery, type SpotForUsers, type SpotForSchools } from './spots';
 import { type SpotForm, type SaveSpotResult, type Values } from './spotEdit';

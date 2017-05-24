@@ -123,6 +123,7 @@
     "react-router-bootstrap": "^0.23.1",
     "react-router-redux": "^4.0.8",
     "redux": "^3.6.0",
+    "redux-auth": "^0.0.5-beta5",
     "redux-form": "^6.7.0",
     "redux-logger": "^3.0.1",
     "redux-thunk": "^2.0.0",
@@ -192,6 +193,7 @@
     "redbox-react": "^1.2.10",
     "sinon": "^1.17.5",
     "sinon-chai": "^2.8.0",
+    "source-map-loader": "^0.2.1",
     "webpack-dev-middleware": "^1.6.1",
     "webpack-hot-middleware": "^2.12.2"
   }

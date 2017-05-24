@@ -4,11 +4,13 @@ import { routerReducer } from 'react-router-redux';
 import { reducer as formReducer } from 'redux-form';
 import { type State } from '~/store/state';
 import { type Action } from '~/store/action';
+import { authStateReducer } from 'redux-auth';
 
 export const makeRootReducer = (asyncReducers: AsyncReducers = {}): Function => {
   return combineReducers({
     routing: routerReducer,
     form: formReducer,
+    auth: authStateReducer,
     ...asyncReducers,
   });
 };
