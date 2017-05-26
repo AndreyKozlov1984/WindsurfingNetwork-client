@@ -6,6 +6,7 @@ import { type DispatchProps, type StateProps, default as Spot } from '../compone
 const mapDispatchToProps: DispatchProps = {};
 const mapStateToProps = (state: State): StateProps => ({
   spot: state.spots.selectedSpot,
+  canEdit: (state.auth.get('user').toJS().attributes || {}).role === 'admin',
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Spot);

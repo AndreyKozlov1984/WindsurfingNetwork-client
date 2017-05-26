@@ -17,6 +17,7 @@ import {
 export type DispatchProps = {} & $Exact<{}>;
 export type StateProps = {|
   spot: ?SpotType,
+  canEdit: boolean,
 |};
 export type Props = {| ...StateProps, ...DispatchProps |};
 
@@ -47,7 +48,7 @@ const MonthsAvailability = ({ spot }: { spot: SpotType }) => (
   </Tabs>
 );
 
-const Spot = ({ spot }: Props) => {
+const Spot = ({ spot, canEdit }: Props) => {
   if (!spot) {
     return <div>Loading...</div>;
   }
@@ -68,9 +69,10 @@ const Spot = ({ spot }: Props) => {
 
                 </div>
               </Media.Body>
-              <Media.Right>
-                <LinkContainer to={`/spots/${spot.id}/edit`}><Button>Edit</Button></LinkContainer>
-              </Media.Right>
+              {canEdit &&
+                <Media.Right>
+                  <LinkContainer to={`/spots/${spot.id}/edit`}><Button>Edit</Button></LinkContainer>
+                </Media.Right>}
             </Media>
             <Col md={4}>
               <h4> Conditions </h4>

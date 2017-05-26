@@ -10,6 +10,7 @@ export type AuthUserState = {
     uid: string,
     provider: string,
     email: string,
+    role: 'admin' | 'user',
   },
 };
 
