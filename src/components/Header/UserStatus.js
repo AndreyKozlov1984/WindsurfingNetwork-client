@@ -15,7 +15,7 @@ export const UserStatus = ({ user }: Props) => {
     return (
       <Nav>
         <NavItem>Logged in as {user.attributes.email} ({user.attributes.role})</NavItem>
-        <SignOutButton className='navbar-btn' />;
+        <SignOutButton className='navbar-btn' />
       </Nav>
     );
   } else {

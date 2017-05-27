@@ -3,6 +3,8 @@ const webpack = require('webpack');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
+const PreloadWebpackPlugin = require('preload-webpack-plugin');
 const project = require('./project.config');
 const debug = require('debug')('app:config:webpack');
 const path = require('path');
@@ -33,14 +35,14 @@ webpackConfig.entry = {
   app : __DEV__
     ? [APP_ENTRY].concat(`webpack-hot-middleware/client?path=${project.compiler_public_path}__webpack_hmr`)
     : [APP_ENTRY],
-  vendor : project.compiler_vendors,
 };
 
 // ------------------------------------
 // Bundle Output
 // ------------------------------------
 webpackConfig.output = {
-  filename   : `[name].[${project.compiler_hash_type}].js`,
+  filename: '[name]-[hash:8].js',
+  chunkFilename: '[name]-[chunkhash:8].js',
   path       : project.paths.dist(),
   publicPath : project.compiler_public_path,
 };
@@ -58,17 +60,34 @@ webpackConfig.externals['react/addons'] = true;
 // ------------------------------------
 webpackConfig.plugins = [
   new webpack.DefinePlugin(project.globals),
+  new webpack.optimize.CommonsChunkPlugin({
+    async: true,
+    children: true,
+    minChunks: 2,
+  }),
   new HtmlWebpackPlugin({
     template : project.paths.client('index.html'),
-    hash     : false,
-    favicon  : project.paths.public('favicon.ico'),
-    filename : 'index.html',
-    inject   : 'body',
-    minify   : {
-      collapseWhitespace : true,
+    inject: true,
+    production: __PROD__,
+    minify: __PROD__ && {
+      removeComments: true,
+      collapseWhitespace: true,
+      removeRedundantAttributes: true,
+      useShortDoctype: true,
+      removeEmptyAttributes: true,
+      removeStyleLinkTypeAttributes: true,
+      keepClosingSlash: true,
+      minifyJS: true,
+      minifyCSS: true,
+      minifyURLs: true,
     },
   }),
   new ExtractTextPlugin({ filename: 'styles.css', allChunks: true, disable: __DEV__ }),
+  new ScriptExtHtmlWebpackPlugin({
+    defaultAttribute: 'async',
+  }),
+  // preload chunks
+  new PreloadWebpackPlugin(),
 ];
 
 // Ensure that the compiler exits on errors during testing so that
@@ -110,19 +129,11 @@ if (__DEV__) {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"',
     }),
-    new webpack.optimize.AggressiveMergingPlugin(),
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
   );
 }
 
 // Don't split bundles during testing, since we only want import one bundle
-if (!__TEST__) {
-  webpackConfig.plugins.push(
-    new webpack.optimize.CommonsChunkPlugin({
-      names : ['vendor'],
-    })
-  );
-}
 
 // ------------------------------------
 // Loaders

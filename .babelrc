@@ -2,6 +2,7 @@
   "presets": [['es2015', {modules: false}], 'react', 'stage-0'],
   "plugins": [
       ["lodash"],
+      ["syntax-dynamic-import"],
       ["transform-dirname-filename"],
       ["transform-line"],
       ["transform-runtime"],
