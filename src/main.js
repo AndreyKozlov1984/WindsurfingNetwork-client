@@ -4,9 +4,13 @@ import createStore from './store/createStore';
 import AppContainer from './containers/AppContainer';
 import { configure } from 'redux-auth';
 
-// Perf! making it available in the dev tools
-import Perf from 'react-addons-perf';
-window.Perf = Perf; // eslint-disable-line immutable/no-mutation
+if (__DEV__) {
+  // Perf! making it available in the dev tools
+  (async function () {
+    const Perf = await import('react-addons-perf');
+    window.Perf = Perf; // eslint-disable-line immutable/no-mutation
+  })();
+}
 
 // ========================================================
 // Store Instantiation
