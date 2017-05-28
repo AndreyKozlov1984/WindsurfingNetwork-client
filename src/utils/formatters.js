@@ -16,6 +16,6 @@ export const centerStyles = {
 };
 
 export function monthByNumber (month: number): string {
-  return moment(+month + 1, 'MM').format('MMMM');
+  return moment((+month + 1).toString(), 'MM').format('MMMM');
 }
 

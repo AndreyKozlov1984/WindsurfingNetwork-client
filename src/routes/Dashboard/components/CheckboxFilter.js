@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { mapValues } from 'lodash';
+import { mapValues } from 'lodash-es';
 import { Checkbox, Panel } from 'react-bootstrap';
 
 export type Option = {|

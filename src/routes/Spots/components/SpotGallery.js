@@ -4,7 +4,7 @@ import React from 'react';
 import { Panel, Breadcrumb, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import Gallery from 'react-photo-gallery';
-import _ from 'lodash';
+import _ from 'lodash-es';
 import { monthByNumber } from '~/utils/formatters';
 import {
   type SpotForGallery as SpotForGalleryType,

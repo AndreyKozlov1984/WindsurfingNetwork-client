@@ -1,5 +1,5 @@
 // @flow
-import _ from 'lodash';
+import _ from 'lodash-es';
 import React from 'react';
 import { Field, FieldArray, Fields, FormSection, reduxForm } from 'redux-form';
 import { mapConditions } from '~/enums/conditions';

@@ -3,7 +3,7 @@ import { getDashboardContent, getLookupData } from './api';
 import { type State as GlobalState } from '~/store/state';
 import { fitBoundsBus, scrollToSpotBus } from '~/store/globalBus';
 import cloneState from '~/store/cloneState';
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 export type MapMarker = {|
   id: number,

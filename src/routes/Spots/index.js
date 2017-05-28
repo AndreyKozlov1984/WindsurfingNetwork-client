@@ -28,9 +28,11 @@ export default (store: Store<State, Action>): RouteConfig => ({
     {
       path: ':id/edit',
       onEnter: async function (location: Location, _replace: any, cb: () => void) {
+        const formReducer = (await import(/* webpackChunkName: "spotEdit" */ 'redux-form')).default;
         const spotEditReducer = (await import(/* webpackChunkName: "spotEdit" */ './modules/spotEdit')).default;
         const { loadForm } = await import(/* webpackChunkName: "spotEdit" */ './modules/spotEdit');
         injectReducer(store, { key: 'spotEdit', reducer: spotEditReducer });
+        injectReducer(store, { key: 'form', reducer: formReducer });
         store.dispatch(loadForm(+location.params.id));
         cb();
       },

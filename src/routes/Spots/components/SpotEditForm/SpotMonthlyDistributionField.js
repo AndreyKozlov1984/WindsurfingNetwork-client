@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { monthByNumber } from '~/utils/formatters';
-import _ from 'lodash';
+import _ from 'lodash-es';
 
 const columnWidth = 100.0 / 12.0;
 const color = function (value: number) {

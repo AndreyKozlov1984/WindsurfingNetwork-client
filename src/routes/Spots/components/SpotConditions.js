@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { Badge, Table } from 'react-bootstrap';
-import _ from 'lodash';
+import _ from 'lodash-es';
 import { type Spot as SpotType } from '../modules/spots';
 import { mapConditions } from '~/enums/conditions';
 

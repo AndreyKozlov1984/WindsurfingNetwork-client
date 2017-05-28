@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import _ from 'lodash';
+import _ from 'lodash-es';
 import { type SimpleSchool } from '../../modules/spots';
 import { AddSchool } from './AddSchool';
 import { ListGroup, ListGroupItem, Media, Button, Glyphicon } from 'react-bootstrap';

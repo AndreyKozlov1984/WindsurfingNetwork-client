@@ -1,5 +1,5 @@
 // @flow
-import _ from 'lodash';
+import _ from 'lodash-es';
 export type Beach = {|
   sand: boolean,
   ground: boolean,

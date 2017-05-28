@@ -4,7 +4,7 @@ import React from 'react';
 import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Link } from 'react-router';
-import _ from 'lodash';
+import _ from 'lodash-es';
 import { centerStyles } from '~/utils/formatters';
 import SpotConditions from './SpotConditions';
 import SpotMonthlyDistribution from './SpotMonthlyDistribution';

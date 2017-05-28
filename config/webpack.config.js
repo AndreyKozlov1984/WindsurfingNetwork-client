@@ -60,11 +60,11 @@ webpackConfig.externals['react/addons'] = true;
 // ------------------------------------
 webpackConfig.plugins = [
   new webpack.DefinePlugin(project.globals),
-  new webpack.optimize.CommonsChunkPlugin({
+  /*new webpack.optimize.CommonsChunkPlugin({
     async: true,
     children: true,
     minChunks: 2,
-  }),
+  }),*/
   new HtmlWebpackPlugin({
     template : project.paths.client('index.html'),
     inject: true,
@@ -114,22 +114,25 @@ if (__DEV__) {
   );
 } else if (__PROD__) {
   webpackConfig.plugins.push(
-    new BundleAnalyzerPlugin({
-      analyzerMode: 'static',
-    }),
     new webpack.LoaderOptionsPlugin({
       minimize: true,
       debug: false,
     }),
     new webpack.optimize.UglifyJsPlugin({
       sourceMap: true,
-      compress: true,
+      compress: {
+        warnings: false
+      },
       mangle: true,
+      beautify: true // use true for debugging
     }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"',
     }),
-    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
+    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+    })
   );
 }
 

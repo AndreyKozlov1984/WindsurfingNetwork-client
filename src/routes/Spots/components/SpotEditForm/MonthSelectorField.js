@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import _ from 'lodash';
+import _ from 'lodash-es';
 import { FormControl } from 'react-bootstrap';
 import { monthByNumber } from '~/utils/formatters';
 /* eslint-disable immutable/no-this */

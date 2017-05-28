@@ -3,6 +3,7 @@
   "plugins": [
       ["lodash"],
       ["syntax-dynamic-import"],
+      ["strip-extra-flow-import"],
       ["transform-dirname-filename"],
       ["transform-line"],
       ["transform-runtime"],

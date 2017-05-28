@@ -539,6 +539,10 @@ babel-plugin-root-import@^5.1.0:
   dependencies:
     slash "^1.0.0"
 
+babel-plugin-strip-extra-flow-import@ZeusTheTrueGod/babel-plugin-strip-extra-flow-import:
+  version "1.0.0"
+  resolved "https://codeload.github.com/ZeusTheTrueGod/babel-plugin-strip-extra-flow-import/tar.gz/2f04b183b1768fa2df39820e59d2b35456ce2525"
+
 babel-plugin-syntax-async-functions@^6.8.0:
   version "6.13.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-syntax-async-functions/-/babel-plugin-syntax-async-functions-6.13.0.tgz#cad9cad1191b5ad634bf30ae0872391e0647be95"
@@ -2564,7 +2568,7 @@ eslint-module-utils@^2.0.0:
     debug "2.2.0"
     pkg-dir "^1.0.0"
 
-eslint-plugin-babel@^4.0.0:
+eslint-plugin-babel@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/eslint-plugin-babel/-/eslint-plugin-babel-4.1.1.tgz#ef285c87039b67beb3bbd227f5b0eed4fb376b87"
 
@@ -3003,9 +3007,9 @@ flow-bin@0.42.0:
   version "0.42.0"
   resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.42.0.tgz#05dd754b6b052de7b150f9210e2160746961e3cf"
 
-flow-bin@^0.45.0:
-  version "0.45.0"
-  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.45.0.tgz#009dd0f577a3f665c74ca8be827ae8c2dd8fd6b5"
+flow-bin@^0.47.0:
+  version "0.47.0"
+  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.47.0.tgz#a2a08ab3e0d1f1cb57d17e27b30b118b62fda367"
 
 flow-config-parser@0.3.0:
   version "0.3.0"
@@ -4275,7 +4279,7 @@ lodash-compat@^3.10.2:
   version "3.10.2"
   resolved "https://registry.yarnpkg.com/lodash-compat/-/lodash-compat-3.10.2.tgz#c6940128a9d30f8e902cd2cf99fd0cba4ecfc183"
 
-lodash-es@^4.17.3, lodash-es@^4.2.0, lodash-es@^4.2.1:
+lodash-es@^4.17.3, lodash-es@^4.17.4, lodash-es@^4.2.0, lodash-es@^4.2.1:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.4.tgz#dcc1d7552e150a0640073ba9cb31d70f032950e7"
 

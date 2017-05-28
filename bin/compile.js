@@ -5,7 +5,7 @@ const webpackConfig = require('../config/webpack.config');
 const project = require('../config/project.config');
 
 // Wrapper around webpack to promisify its compiler and supply friendly logging
-const webpackCompiler = (webpackConfig) =>
+const webpackCompiler = webpackConfig =>
   new Promise((resolve, reject) => {
     const compiler = webpack(webpackConfig);
 
@@ -15,9 +15,20 @@ const webpackCompiler = (webpackConfig) =>
         return reject(err);
       }
 
-      const jsonStats = stats.toJson();
+      const jsonStats = stats.toJson('verbose');
       debug('Webpack compile completed.');
       debug(stats.toString(project.compiler_stats));
+
+      console.log('[webpack]', jsonStats.toString({
+        assets: true,
+        chunks: true,
+        colors: true,
+        hash: false,
+        providedExports: true,
+        timings: true,
+        usedExports: true,
+        version: false,
+      }));
 
       if (jsonStats.errors.length > 0) {
         debug('Webpack compiler encountered errors.');
@@ -47,10 +58,11 @@ const compile = () => {
     .then(() => {
       debug('Compilation completed successfully.');
     })
-    .catch((err) => {
+    .catch(err => {
       debug('Compiler encountered an error.', err);
       process.exit(1);
     });
 };
 
 compile();
+
