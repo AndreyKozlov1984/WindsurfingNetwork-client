@@ -541,7 +541,7 @@ babel-plugin-root-import@^5.1.0:
 
 babel-plugin-strip-extra-flow-import@ZeusTheTrueGod/babel-plugin-strip-extra-flow-import:
   version "1.0.0"
-  resolved "https://codeload.github.com/ZeusTheTrueGod/babel-plugin-strip-extra-flow-import/tar.gz/2f04b183b1768fa2df39820e59d2b35456ce2525"
+  resolved "https://codeload.github.com/ZeusTheTrueGod/babel-plugin-strip-extra-flow-import/tar.gz/ff531718ed7aaad2bd2bb3a95fdaf01c1885d245"
 
 babel-plugin-syntax-async-functions@^6.8.0:
   version "6.13.0"

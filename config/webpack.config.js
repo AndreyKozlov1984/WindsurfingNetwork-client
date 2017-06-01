@@ -82,7 +82,7 @@ webpackConfig.plugins = [
       minifyURLs: true,
     },
   }),
-  new ExtractTextPlugin({ filename: 'styles.css', allChunks: true, disable: __DEV__ }),
+  new ExtractTextPlugin({ filename: 'styles.css', allChunks: true, disable: false }),
   new ScriptExtHtmlWebpackPlugin({
     defaultAttribute: 'async',
   }),

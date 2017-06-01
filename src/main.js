@@ -40,11 +40,10 @@ const render = async () => {
   ReactDOM.render(<AppContainer store={store} routes={routes} />, MOUNT_NODE);
 };
 
-const hotReloadedRender = () => {
+const hotReloadedRender = async () => {
+  const RedBox = (await import('redbox-react')).default;
   const renderApp = render;
   const renderError = error => {
-    const RedBox = require('redbox-react').default;
-
     ReactDOM.render(<RedBox error={error} />, MOUNT_NODE);
   };
 
