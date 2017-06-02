@@ -5,12 +5,16 @@ import { Link } from 'react-router';
 import { scrollToSpotBus, type ScrollToSpotPayload } from '~/store/globalBus';
 import { type Spot as SpotType } from '../modules/dashboard';
 import autobind from 'autobind-decorator';
-import jquery from 'jquery';
 
 export type PropsType = {| ...SpotType, useLinks: boolean |};
 
 /* eslint-disable immutable/no-this */
 class Spot extends React.PureComponent<*, PropsType, *> {
+  state: {
+    jquery: any,
+  } = {
+    jquery: null,
+  };
   element: HTMLElement;
   componentWillMount () {
     scrollToSpotBus.subscribe(this.scrollIntoView);
@@ -20,9 +24,23 @@ class Spot extends React.PureComponent<*, PropsType, *> {
   }
   @autobind scrollIntoView ({ id }: ScrollToSpotPayload) {
     if (id === this.props.id) {
+      this.doScrollIntoView();
+    }
+  }
+  async doScrollIntoView () {
+    if (this.state.jquery) {
       this.element.scrollIntoView();
-      const container = jquery(this.element).closest('.scroll-container');
+      const container = this.state.jquery(this.element).closest('.scroll-container');
       container.scrollTop(container.scrollTop() - 15);
+    } else {
+      const jquery = await import(/* webpackChunkName: "jquery" */ 'jquery');
+      console.info(jquery);
+      this.setState(
+        {
+          jquery: jquery,
+        },
+        () => this.doScrollIntoView(),
+      );
     }
   }
   render () {

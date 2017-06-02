@@ -60,11 +60,6 @@ webpackConfig.externals['react/addons'] = true;
 // ------------------------------------
 webpackConfig.plugins = [
   new webpack.DefinePlugin(project.globals),
-  /*new webpack.optimize.CommonsChunkPlugin({
-    async: true,
-    children: true,
-    minChunks: 2,
-  }),*/
   new HtmlWebpackPlugin({
     template : project.paths.client('index.html'),
     inject: true,
@@ -82,7 +77,7 @@ webpackConfig.plugins = [
       minifyURLs: true,
     },
   }),
-  new ExtractTextPlugin({ filename: 'styles.css', allChunks: true, disable: false }),
+  new ExtractTextPlugin({ filename: 'styles.css', allChunks: true }),
   new ScriptExtHtmlWebpackPlugin({
     defaultAttribute: 'async',
   }),
@@ -121,10 +116,10 @@ if (__DEV__) {
     new webpack.optimize.UglifyJsPlugin({
       sourceMap: true,
       compress: {
-        warnings: false
+        warnings: false,
       },
       mangle: true,
-      beautify: true // use true for debugging
+      beautify: false, // use true for debugging
     }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"',
