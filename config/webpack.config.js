@@ -3,8 +3,6 @@ const webpack = require('webpack');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
-const PreloadWebpackPlugin = require('preload-webpack-plugin');
 const project = require('./project.config');
 const debug = require('debug')('app:config:webpack');
 const path = require('path');
@@ -78,11 +76,6 @@ webpackConfig.plugins = [
     },
   }),
   new ExtractTextPlugin({ filename: 'styles.css', allChunks: true }),
-  new ScriptExtHtmlWebpackPlugin({
-    defaultAttribute: 'async',
-  }),
-  // preload chunks
-  new PreloadWebpackPlugin(),
 ];
 
 // Ensure that the compiler exits on errors during testing so that
