@@ -40,7 +40,7 @@ export type SimpleSchool = {|
 export type SpotForUsers = {|
   id: number,
   name: string,
-  users: User[],
+  count: number,
 |};
 
 export type SpotForSchools = {|

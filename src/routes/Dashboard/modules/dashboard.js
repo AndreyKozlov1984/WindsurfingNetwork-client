@@ -77,10 +77,6 @@ type SelectMarkerAction = {|
   type: 'dashboard/SELECT_MARKER',
   spotId: number,
 |};
-type SetScrollAction = {|
-  type: 'dashboard/SET_SCROLL',
-  offset: number,
-|};
 
 export type Action =
   | UpdateUIFiltersAction
@@ -92,8 +88,7 @@ export type Action =
   | SetMapPositionAction
   | SetLookupDataAction
   | SelectSpotAction
-  | SelectMarkerAction
-  | SetScrollAction;
+  | SelectMarkerAction;
 
 type Dispatch = (action: Action | ThunkAction) => Promise<void>;
 type GetState = () => GlobalState;
@@ -111,7 +106,6 @@ export type State = {|
   data: ?DashboardData,
   lookupData: ?LookupData,
   selectedItemId: ?number,
-  scrollPosition: number,
 |};
 
 // ------------------------------------
@@ -224,13 +218,6 @@ export function selectSpot (spotId: number): SelectSpotAction {
   };
 }
 
-export function setScroll (offset: number): SetScrollAction {
-  return {
-    type: 'dashboard/SET_SCROLL',
-    offset: offset,
-  };
-}
-
 export function setIsLoading (): SetIsLoadingAction {
   return {
     type: 'dashboard/SET_IS_LOADING',
@@ -332,11 +319,6 @@ const selectMarkerHandler = function (state: State, action: SelectMarkerAction):
     });
   }
 };
-const setScrollHandler = function (state: State, action: SetScrollAction) {
-  return cloneState(state, {
-    scrollPosition: action.offset,
-  });
-};
 
 // ------------------------------------
 // Reducer
@@ -350,7 +332,6 @@ const initialState: State = {
   zoom: 3,
   filters: {},
   selectedItemId: null,
-  scrollPosition: 0,
 };
 
 export default function dashboardReducer (state: State = initialState, action: Action): State {
@@ -375,8 +356,6 @@ export default function dashboardReducer (state: State = initialState, action: A
       return selectSpotHandler(state, action);
     case 'dashboard/SELECT_MARKER':
       return selectMarkerHandler(state, action);
-    case 'dashboard/SET_SCROLL':
-      return setScrollHandler(state, action);
     default:
       (action: empty);
       return state;

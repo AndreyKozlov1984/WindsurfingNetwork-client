@@ -1,7 +1,7 @@
 // @flow
 import { fetch } from 'redux-auth';
 import validate from '~/utils/validator';
-import { type Spot, type SpotForGallery, type SpotForUsers, type SpotForSchools } from './spots';
+import { type Spot, type SpotForGallery, type User, type SpotForUsers, type SpotForSchools } from './spots';
 import { type SpotForm, type SaveSpotResult, type Values } from './spotEdit';
 export async function getSpot (id: number): Promise<Spot> {
   const response = await fetch(`/api/spots/${id}`, {
@@ -36,6 +36,22 @@ export async function getSpotUsers (id: number): Promise<SpotForUsers> {
   });
   const result = await response.json();
   (validate(__filename, __line, result): SpotForUsers);
+  return result;
+}
+
+export async function getSpotUsersPage ({
+  id,
+  startIndex,
+  stopIndex,
+}: { id: number, startIndex: number, stopIndex: number }): Promise<User[]> {
+  const response = await fetch(`/api/spots/${id}/users/page?offset=${startIndex}&limit=${stopIndex - startIndex}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  const result = await response.json();
+  (validate(__filename, __line, result): User[]);
   return result;
 }
 

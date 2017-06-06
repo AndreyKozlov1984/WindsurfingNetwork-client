@@ -11,7 +11,7 @@ import DangerCheckboxFilterContainer from '../containers/DangerCheckboxFilterCon
 
 import CountrySelectorContainer from '../containers/CountrySelectorContainer';
 import MapContainer from '../containers/MapContainer';
-import RightPartContainer from '../containers/RightPartContainer';
+import RightPart from '../components/RightPart';
 
 import { type Filters } from '../modules/dashboard';
 
@@ -47,7 +47,7 @@ const Dashboard = ({ filters, isReady }: Props) => {
           mapElement={<div style={{ height: `100%` }} />}
         />
       </div>
-      <RightPartContainer />
+      <RightPart />
     </div>
   );
 };
