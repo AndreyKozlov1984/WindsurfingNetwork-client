@@ -2,9 +2,11 @@
 import emitter from 'event-emitter';
 
 export type FitBoundsPayload = {} & $Shape<{}>;
+export type ScrollToUserPayload = {} & $Shape<{}>;
 export type ScrollToSpotPayload = {| id: number |};
 export const fitBoundsBus: Bus<FitBoundsPayload> = makeBus();
 export const scrollToSpotBus: Bus<ScrollToSpotPayload> = makeBus();
+export const scrollToUsersBus: Bus<ScrollToUserPayload> = makeBus();
 
 type Bus<Payload> = {
   subscribe: (handler: (payload: Payload) => any) => void,

@@ -1,5 +1,5 @@
 // @flow
-import { getSpot, getSpotGallery, getSpotUsers, getSpotSchools } from './api';
+import { getSpot, getSpotGallery, getSpotSchools } from './api';
 import { type State as GlobalState } from '~/store/state';
 
 import cloneState from '~/store/cloneState';
@@ -37,12 +37,6 @@ export type SimpleSchool = {|
   name: string,
 |};
 
-export type SpotForUsers = {|
-  id: number,
-  name: string,
-  count: number,
-|};
-
 export type SpotForSchools = {|
   id: number,
   name: string,
@@ -61,16 +55,6 @@ export type SpotForGallery = {|
   id: number,
   name: string,
   photos: PhotosByMonth,
-|};
-
-export type User = {|
-  id: number,
-  logo: string,
-  name: string,
-  country: ?string,
-  city: ?string,
-  rating: number,
-  photos_count: number,
 |};
 
 export type School = {|
@@ -93,11 +77,6 @@ type SetSelectedGalleryAction = {|
   data: SpotForGallery,
 |};
 
-type SetSelectedUsersAction = {|
-  type: 'spots/SET_SELECTED_USERS',
-  data: SpotForUsers,
-|};
-
 type SetSelectedSchoolsAction = {|
   type: 'spots/SET_SELECTED_SCHOOLS',
   data: SpotForSchools,
@@ -109,12 +88,7 @@ type SelectMonthAction = {|
 |};
 
 // Actions
-export type Action =
-  | SetSelectedAction
-  | SetSelectedGalleryAction
-  | SetSelectedUsersAction
-  | SetSelectedSchoolsAction
-  | SelectMonthAction;
+export type Action = SetSelectedAction | SetSelectedGalleryAction | SetSelectedSchoolsAction | SelectMonthAction;
 type Dispatch = (action: Action | ThunkAction) => Promise<void>;
 type GetState = () => GlobalState;
 type ThunkAction = (dispatch: Dispatch, getState: GetState) => Promise<void>;
@@ -123,7 +97,6 @@ export type State = {|
   selectedSpot: ?Spot,
   selectedGallery: ?SpotForGallery,
   selectedMonth: ?number,
-  selectedUsers: ?SpotForUsers,
   selectedSchools: ?SpotForSchools,
 |};
 
@@ -133,13 +106,6 @@ export function loadGallery ({ spotId, selectedMonth }: { spotId: number, select
       await dispatch(fetchSpotGallery(spotId));
     }
     dispatch(selectMonth(selectedMonth));
-  };
-}
-
-export function loadSpotUsers (spotId: number): ThunkAction {
-  return async function (dispatch: Dispatch, getState: GetState): Promise<void> {
-    const result = await getSpotUsers(spotId);
-    dispatch(setSelectedUsers(result));
   };
 }
 
@@ -167,13 +133,6 @@ export function fetchSpotGallery (id: number): ThunkAction {
 export function setSelected (data: Spot): SetSelectedAction {
   return {
     type: 'spots/SET_SELECTED',
-    data: data,
-  };
-}
-
-export function setSelectedUsers (data: SpotForUsers): SetSelectedUsersAction {
-  return {
-    type: 'spots/SET_SELECTED_USERS',
     data: data,
   };
 }
@@ -208,9 +167,6 @@ const setSelectedHandler = function (state: State, action: SetSelectedAction): S
 const setSelectedGalleryHandler = function (state: State, action: SetSelectedGalleryAction): State {
   return cloneState(state, { selectedGallery: action.data });
 };
-const setSelectedUsersHandler = function (state: State, action: SetSelectedUsersAction): State {
-  return cloneState(state, { selectedUsers: action.data });
-};
 const setSelectedSchoolsHandler = function (state: State, action: SetSelectedSchoolsAction): State {
   return cloneState(state, { selectedSchools: action.data });
 };
@@ -226,7 +182,6 @@ const initialState: State = {
   selectedSpot: null,
   selectedGallery: null,
   selectedMonth: null,
-  selectedUsers: null,
   selectedSchools: null,
 };
 
@@ -236,8 +191,6 @@ export default function spotsReducer (state: State = initialState, action: Actio
       return setSelectedHandler(state, action);
     case 'spots/SET_SELECTED_GALLERY':
       return setSelectedGalleryHandler(state, action);
-    case 'spots/SET_SELECTED_USERS':
-      return setSelectedUsersHandler(state, action);
     case 'spots/SET_SELECTED_SCHOOLS':
       return setSelectedSchoolsHandler(state, action);
     case 'spots/SELECT_MONTH':

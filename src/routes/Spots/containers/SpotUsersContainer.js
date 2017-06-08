@@ -7,7 +7,8 @@ import { default as SpotUsers, type StateProps, type DispatchProps } from '../co
 const mapDispatchToProps: DispatchProps = {};
 
 const mapStateToProps = (state: State): StateProps => ({
-  spot: state.spots.selectedUsers,
+  spot: state.spotUsers.selectedUsers,
+  search: state.spotUsers.search,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SpotUsers);

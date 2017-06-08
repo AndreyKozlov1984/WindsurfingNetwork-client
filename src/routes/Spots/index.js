@@ -68,12 +68,16 @@ export default (store: Store<State, Action>): RouteConfig => ({
     {
       path: ':id/users',
       onEnter: async function (location: Location, _replace: any, cb: () => void) {
-        const { loadSpotUsers } = await import(/* webpackChunkName: "spots" */ './modules/spots');
+        const reducer = (await import(/* webpackChunkName: "spotUsers" */ './modules/spotUsers')).default;
+        injectReducer(store, { key: 'spotUsers', reducer });
+        const { loadSpotUsers } = await import(/* webpackChunkName: "spotUsers" */ './modules/spotUsers');
         store.dispatch(loadSpotUsers(+location.params.id));
         cb();
       },
       // eslint-disable-next-line react/display-name
-      component: () => <Chunk load={() => import(/* webpackChunkName: "spots" */ './containers/SpotUsersContainer')} />,
+      component: () => (
+        <Chunk load={() => import(/* webpackChunkName: "spotUsers" */ './containers/SpotUsersContainer')} />
+      ),
     },
     {
       path: ':id/schools',

@@ -1,7 +1,8 @@
 // @flow
 import { fetch } from 'redux-auth';
 import validate from '~/utils/validator';
-import { type Spot, type SpotForGallery, type User, type SpotForUsers, type SpotForSchools } from './spots';
+import { type Spot, type SpotForGallery, type SpotForSchools } from './spots';
+import { type User, type SpotForUsers } from './spotUsers';
 import { type SpotForm, type SaveSpotResult, type Values } from './spotEdit';
 export async function getSpot (id: number): Promise<Spot> {
   const response = await fetch(`/api/spots/${id}`, {
@@ -27,8 +28,8 @@ export async function getSpotGallery (id: number): Promise<SpotForGallery> {
   return result;
 }
 
-export async function getSpotUsers (id: number): Promise<SpotForUsers> {
-  const response = await fetch(`/api/spots/${id}/users`, {
+export async function getSpotUsers (id: number, search: string): Promise<SpotForUsers> {
+  const response = await fetch(`/api/spots/${id}/users?search=${search}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -43,13 +44,18 @@ export async function getSpotUsersPage ({
   id,
   startIndex,
   stopIndex,
-}: { id: number, startIndex: number, stopIndex: number }): Promise<User[]> {
-  const response = await fetch(`/api/spots/${id}/users/page?offset=${startIndex}&limit=${stopIndex - startIndex}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
+  search,
+}: { id: number, search: string, startIndex: number, stopIndex: number }): Promise<User[]> {
+  const response = await fetch(
+    `/api/spots/${id}/users/page?search=${search}&
+  offset=${startIndex}&limit=${stopIndex - startIndex}`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     },
-  });
+  );
   const result = await response.json();
   (validate(__filename, __line, result): User[]);
   return result;
