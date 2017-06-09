@@ -46,16 +46,18 @@ export async function getSpotUsersPage ({
   stopIndex,
   search,
 }: { id: number, search: string, startIndex: number, stopIndex: number }): Promise<User[]> {
-  const response = await fetch(
-    `/api/spots/${id}/users/page?search=${search}&
-  offset=${startIndex}&limit=${stopIndex - startIndex}`,
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+  const qs = require('querystring');
+  const params = qs.stringify({
+    search: search,
+    offset: startIndex,
+    limit: stopIndex - startIndex + 1,
+  });
+  const response = await fetch(`/api/spots/${id}/users/page?${params}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
     },
-  );
+  });
   const result = await response.json();
   (validate(__filename, __line, result): User[]);
   return result;
