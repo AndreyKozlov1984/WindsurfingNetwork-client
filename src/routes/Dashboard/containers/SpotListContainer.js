@@ -10,10 +10,10 @@ const mapDispatchToProps: DispatchProps = {
 };
 
 const mapStateToProps = function (state: State): StateProps {
-  const spots = state.dashboard.data ? state.dashboard.data.spots : [];
   return {
-    items: spots,
+    items: state.dashboard.data ? state.dashboard.data.spots : [],
     selectedItemId: state.dashboard.selectedItemId,
+    filters: state.dashboard.filters,
   };
 };
 

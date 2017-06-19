@@ -9,6 +9,7 @@ export type MapMarker = {|
   id: number,
   lat: number,
   lng: number,
+  index: number,
 |};
 export type Spot = {|
   id: number,
@@ -16,9 +17,9 @@ export type Spot = {|
   country: string,
   region: ?string,
   logo: string,
-  usersCount: number,
-  schoolsCount: number,
-  photosCount: number,
+  users_count: number,
+  schools_count: number,
+  photos_count: number,
 |};
 export type Activity = {|
   id: number,
@@ -29,7 +30,6 @@ export type Activity = {|
 export type DashboardData = {|
   mapMarkers: MapMarker[],
   spots: Spot[],
-  activities: Activity[],
 |};
 export type LookupData = {|
   countries: string[],
@@ -116,6 +116,7 @@ export function setFilterState ({ filterId, filterValue }: {| filterId: string, 
     dispatch(updateUiFilters({ filterId, filterValue }));
     dispatch(reload());
     // reloadMap
+    scrollToSpotBus.emit({ index: 0 });
   };
 }
 
@@ -173,7 +174,13 @@ export function selectMarker (spotId: number): ThunkAction {
       type: 'dashboard/SELECT_MARKER',
       spotId: spotId,
     });
-    scrollToSpotBus.emit({ id: spotId });
+    const data = getState().dashboard.data;
+    if (!data) {
+      return;
+    }
+    const spotIndex = _.findIndex(data.spots, { id: spotId });
+    scrollToSpotBus.emit({ index: spotIndex });
+    console.info(spotIndex);
   };
 }
 
