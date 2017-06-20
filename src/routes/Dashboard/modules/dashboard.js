@@ -29,7 +29,7 @@ export type Activity = {|
 |};
 export type DashboardData = {|
   mapMarkers: MapMarker[],
-  spots: Spot[],
+  spots: { count: number },
 |};
 export type LookupData = {|
   countries: string[],
@@ -178,7 +178,7 @@ export function selectMarker (spotId: number): ThunkAction {
     if (!data) {
       return;
     }
-    const spotIndex = _.findIndex(data.spots, { id: spotId });
+    const spotIndex = _.findIndex(data.mapMarkers, { id: spotId });
     scrollToSpotBus.emit({ index: spotIndex });
     console.info(spotIndex);
   };

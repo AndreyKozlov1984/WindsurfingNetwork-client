@@ -10,8 +10,9 @@ const mapDispatchToProps: DispatchProps = {
 };
 
 const mapStateToProps = function (state: State): StateProps {
+  const spotsCount = state.dashboard.data ? state.dashboard.data.spots.count : 0;
   return {
-    items: state.dashboard.data ? state.dashboard.data.spots : [],
+    count: spotsCount,
     selectedItemId: state.dashboard.selectedItemId,
     filters: state.dashboard.filters,
   };
