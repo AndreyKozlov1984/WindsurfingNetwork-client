@@ -21,6 +21,30 @@ export type MapMarkerProps = {|
   |},
   key: number,
 |};
+const mapStyles = [
+  {
+    featureType: 'landscape',
+    stylers: [
+      {
+        color: '#dec94f',
+      },
+      {
+        saturation: -25,
+      },
+    ],
+  },
+  {
+    featureType: 'water',
+    stylers: [
+      {
+        color: '#385c62',
+      },
+      {
+        saturation: -50,
+      },
+    ],
+  },
+];
 /* eslint-disable immutable/no-this */
 class MapComponent extends React.PureComponent {
   map: any;
@@ -52,6 +76,7 @@ class MapComponent extends React.PureComponent {
         ref={(map: any) => {
           this.map = map; // eslint-disable-line immutable/no-mutation
         }}
+        defaultOptions={{ styles: mapStyles }}
         zoom={this.props.zoom}
         center={this.props.center}
         onIdle={this.onIdle}
