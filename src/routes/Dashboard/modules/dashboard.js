@@ -1,7 +1,7 @@
 // @flow
 import { getDashboardContent, getLookupData } from './api';
 import { type State as GlobalState } from '~/store/state';
-import { fitBoundsBus, scrollToSpotBus } from '~/store/globalBus';
+import { fitBoundsBus, setCenterBus, scrollToSpotBus } from '~/store/globalBus';
 import cloneState from '~/store/cloneState';
 import _ from 'lodash-es';
 
@@ -57,14 +57,6 @@ type SetQueuedRequestAction = {|
 type ClearQueuedRequestAction = {|
   type: 'dashboard/CLEAR_QUEUED_REQUEST',
 |};
-type SetMapPositionAction = {|
-  type: 'dashboard/SET_MAP_POSITION',
-  center: {|
-    lat: number,
-    lng: number,
-  |},
-  zoom: number,
-|};
 type SetLookupDataAction = {|
   type: 'dashboard/SET_LOOKUP_DATA',
   lookupData: LookupData,
@@ -85,7 +77,6 @@ export type Action =
   | SetDataAction
   | SetQueuedRequestAction
   | ClearQueuedRequestAction
-  | SetMapPositionAction
   | SetLookupDataAction
   | SelectSpotAction
   | SelectMarkerAction;
@@ -97,11 +88,6 @@ type ThunkAction = (dispatch: Dispatch, getState: GetState) => Promise<void>;
 export type State = {|
   isLoading: boolean,
   hasQueuedRequest: boolean,
-  center: {|
-    lat: number,
-    lng: number,
-  |},
-  zoom: number,
   filters: Filters,
   data: ?DashboardData,
   lookupData: ?LookupData,
@@ -164,6 +150,19 @@ export function reload (): ThunkAction {
       }
     } else {
       dispatch(setQueuedRequest());
+    }
+  };
+}
+
+export function selectItemFromList (spotId: number): ThunkAction {
+  return async function (dispatch: Dispatch, getState: GetState): Promise<void> {
+    dispatch(selectSpot(spotId));
+    const state = getState().dashboard;
+    if (state.data) {
+      const selectedItem = _.find(state.data.mapMarkers, { id: spotId });
+      if (selectedItem) {
+        setCenterBus.emit({ lat: selectedItem.lat, lng: selectedItem.lng });
+      }
     }
   };
 }
@@ -244,17 +243,6 @@ export function setData (data: DashboardData): SetDataAction {
   };
 }
 
-export function setMapPosition ({
-  center,
-  zoom,
-}: { center: {| lat: number, lng: number |}, zoom: number }): SetMapPositionAction {
-  return {
-    type: 'dashboard/SET_MAP_POSITION',
-    center,
-    zoom,
-  };
-}
-
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
@@ -280,12 +268,6 @@ const clearQueuedRequestHandler = function (state: State, action: ClearQueuedReq
 const setDataHandler = function (state: State, action: SetDataAction) {
   return cloneState(state, { data: action.data });
 };
-const setMapPositionHandler = function (state: State, action: SetMapPositionAction): State {
-  return cloneState(state, {
-    center: action.center,
-    zoom: action.zoom,
-  });
-};
 const setLookupDataHandler = function (state: State, action: SetLookupDataAction) {
   return cloneState(state, {
     lookupData: action.lookupData,
@@ -298,11 +280,6 @@ const selectSpotHandler = function (state: State, action: SelectSpotAction) {
   const selectedItem = _.find(state.data.mapMarkers, { id: action.spotId });
   if (selectedItem) {
     return cloneState(state, {
-      center: {
-        lat: selectedItem.lat,
-        lng: selectedItem.lng,
-      },
-      zoom: state.zoom < 12 ? 12 : state.zoom,
       selectedItemId: action.spotId,
     });
   } else {
@@ -335,8 +312,6 @@ const initialState: State = {
   lookupData: null,
   isLoading: false,
   hasQueuedRequest: false,
-  center: { lat: 23.34, lng: 34.45 },
-  zoom: 3,
   filters: {},
   selectedItemId: null,
 };
@@ -355,8 +330,6 @@ export default function dashboardReducer (state: State = initialState, action: A
       return clearQueuedRequestHandler(state, action);
     case 'dashboard/SET_DATA':
       return setDataHandler(state, action);
-    case 'dashboard/SET_MAP_POSITION':
-      return setMapPositionHandler(state, action);
     case 'dashboard/SET_LOOKUP_DATA':
       return setLookupDataHandler(state, action);
     case 'dashboard/SELECT_SPOT':

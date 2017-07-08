@@ -1,12 +1,12 @@
 // @flow
 import { connect } from 'react-redux';
-import { selectSpot } from '../modules/dashboard';
+import { selectItemFromList } from '../modules/dashboard';
 import { type State } from '~/store/state';
 
 import { default as SpotList, type StateProps, type DispatchProps } from '../components/SpotList';
 
 const mapDispatchToProps: DispatchProps = {
-  onSelectItem: selectSpot,
+  onSelectItem: selectItemFromList,
 };
 
 const mapStateToProps = function (state: State): StateProps {
